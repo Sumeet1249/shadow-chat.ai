@@ -1,4 +1,1 @@
-{
-  "name": "shadow-node",
-  "version": "1.0.0"
-}
+{"name": "shadow-chat.ai", "private": true, "workspaces": ["apps/*", "packages/*"]}

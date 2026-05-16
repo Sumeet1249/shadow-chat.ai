@@ -1,0 +1,331 @@
+
+# Shadow Node — Complete Audit & Recovery Plan
+
+## Audit Executive Summary
+
+The React codebase is **architecturally sound**. Routing, state stores, guards, lazy loading, and the design token system are all correctly implemented and must not be touched. The regressions are concentrated in three specific layers: layout structural gaps, visual/typographic drift from the prototype, and incomplete page implementations. Here is every finding, precisely located.
+
+---
+
+## SILENT AUDIT FINDINGS
+
+### 🔴 Critical Structural Regressions
+
+**Finding 1 — Sidebar: Missing User Identity Widget**
+The prototype's sidebar has a distinct user section between the logo and nav: a circular avatar gradient, the handle `Caleb_Shadow`, and the `ELITE TIER` amber badge (`.txt-a`). The React `Sidebar.tsx` has **no user section at all**. It jumps directly from logo to navigation. This is the most visually obvious missing piece in the authenticated shell.
+
+**Finding 2 — Topbar: Wrong Typography on Page Title**
+The prototype renders the page title in `font-family: var(--ff-disp)` (Syne), `font-weight: 700`, `font-size: 17px`, `letter-spacing: -0.018em` — the display typeface. The React `Topbar.tsx` renders it in `.mono` class (Space Mono), `font-size: 12px`, `color: var(--txt2)`, `font-weight: 400`. This makes the topbar look like a status readout instead of a page title. It is the wrong font, wrong size, wrong weight, wrong color, and wrong letter-spacing simultaneously.
+
+**Finding 3 — Dashboard: Stat Card Set Diverges from Prototype**
+Prototype Dashboard stat row: `TOTAL REPLIES`, `TOKENS USED`, `WIN RATE`, `ACTIVE NODES`. React Dashboard stat row: `TOTAL REPLIES`, **`ENGAGEMENT RATE`**, `NODES ACTIVE`, `WIN RATE`. The second card is a completely different metric (`ENGAGEMENT RATE` vs `TOKENS USED`), the third card is reworded and reordered, and the `TOKENS USED` card with its purple `#a78bfa` color is entirely absent.
+
+**Finding 4 — Dashboard: Right Column Missing Quota Widget**
+The prototype Dashboard right column has three widgets stacked: Active Persona, Node Status, and a **Quota Usage** widget with `API Calls` and `Storage` progress bars plus an `Upgrade Plan →` button. The React `Dashboard.tsx` right column has only two widgets (Active Persona, Node Status). The Quota widget is completely missing.
+
+**Finding 5 — Dashboard: Sparkline Activity Chart Missing**
+The prototype Dashboard left column has a sparkline chart widget (`ACTIVITY — 12H` with a `LIVE` green chip and 12 animated bars) above the Recent Outputs section. The React `Dashboard.tsx` goes directly to Quick Launch then Recent Outputs — the sparkline is absent.
+
+**Finding 6 — ParticleCanvas: Duplicated `if (ctx)` Guard**
+`ParticleCanvas.tsx` has a nested `if (ctx) { if (ctx) { ... } }` double-guard inside both the particle draw loop and the connection line draw loop. This is a leftover from TypeScript narrowing workarounds and creates confusingly nested blocks. It is harmless but should be cleaned up.
+
+**Finding 7 — AppShell `scan` Class on Wrong Element**
+The `.scan::after` CSS creates a fixed scanline overlay using `position: fixed`. It is applied to `<div className="bg-void min-h-screen scan">` in `AppShell.tsx` — this is correct. However the `scan` class is also applied in `Landing.tsx`, `Login.tsx`, `Register.tsx`, and `Onboarding.tsx` on their root div, which is also correct. **But** `ScanlineOverlay` was never extracted into its own component as planned — it is raw className application throughout. This is a component boundary gap, not a visual bug.
+
+**Finding 8 — NeuralReply: Stub Comment Left In**
+`NeuralReply.tsx` line 1: `// Phase 5.2 — NeuralReply: Full implementation coming in Phase 5 // Stub provided so router compiles cleanly.` — The component is actually implemented (platform selector, persona picker, output panel), but the stale stub comment is still there. Minor but signals incomplete cleanup.
+
+**Finding 9 — Router: `dashboard` and App Routes Missing Leading Slash**
+In `router/index.tsx`, protected routes inside the `AppShell` children are written as `path: 'dashboard'` (relative) while the router structure requires `path: '/dashboard'` (absolute) for `createBrowserRouter` children when using a layout route without an explicit `path`. This is a **routing bug** — direct navigation to `/dashboard` may or may not work depending on the React Router version behavior with relative paths inside a pathless layout route. Needs verification and explicit leading slashes added.
+
+**Finding 10 — `AdminRoute` Wrapping `DevSandbox` Twice**
+In `router/index.tsx`, `/sandbox` appears **twice**: once inside the `AppShell` children as `path: 'sandbox', element: <AdminRoute><DevSandbox /></AdminRoute>`, and again as a top-level route `path: '/sandbox', element: <AdminRoute><AppShell /></AdminRoute>` with its own children. This creates two competing route definitions for the same path, which is a routing conflict.
+
+**Finding 11 — `lucide-react` Version Conflict**
+`package.json` lists `lucide-react: "^1.16.0"` but the planned stack specified `0.4xx`. Version `1.x` of Lucide React has breaking changes from `0.x` — component import names changed significantly in the 1.0 release. The `Icon.tsx` map imports specific named icons (Brain, Sparkles, Network, etc.) — these need to be verified against the actual installed version's export list to confirm no silent import failures are happening (failed imports return `undefined`, and `Icon.tsx` silently returns `null` on unmapped names, making missing icons invisible).
+
+---
+
+### 🟠 Visual & Aesthetic Regressions
+
+**Finding 12 — Landing Page Stats Diverge from Prototype**
+Prototype stats: `2.4M+ REPLIES GENERATED`, `98.7% UPTIME SLA`, `<180ms AVG LATENCY`, `47K+ ACTIVE NODES`. React Landing stats: `12K+ REPLIES/DAY`, `3.2K OPERATORS`, `142ms AVG LATENCY`, `91% WIN RATE`. Four completely different stat values and labels. The prototype's stats were marketing-grade ("2.4M+ replies generated") — the React version uses smaller, less impressive numbers.
+
+**Finding 13 — Landing Page: Stats Row Missing Dividers**
+The prototype renders vertical divider `<div style={{ width: 1, height: 38, background: 'var(--border)' }}>` between each stat in the `.stats-row`. The React `Landing.tsx` renders stats with no dividers — the stats just sit next to each other in a flex row with `gap` only. The prototype's pipe-separated visual rhythm is gone.
+
+**Finding 14 — Sidebar: Missing Bottom Status Footer**
+The React `Sidebar.tsx` has a footer section but it only shows `<span className="dot" />` + `ALL SYSTEMS NOMINAL`. The prototype sidebar footer had the user avatar (30x30 circular gradient), handle text, `ELITE TIER` amber chip, and a pulse dot — all in the **middle** section between logo and nav, not the footer. The footer in the prototype showed `Sign Out` link only. React collapsed all of this and moved the user info to the Topbar (where the prototype had it too, but with less detail).
+
+**Finding 15 — Topbar: Missing Notifications Bell**
+The prototype Topbar has three elements in the right group: the ⌘K search button, a **notification bell button** with an amber dot indicator, and a "Generate" primary button. The React `Topbar.tsx` right group has: ⌘K button, user avatar + handle, logout button. The notification bell is absent. The "Generate" quick-action primary button is absent. The user avatar moved from sidebar to topbar (correct) but the bell and generate shortcut were lost.
+
+**Finding 16 — Arena: ELO Column Layout Wrong**
+The prototype Arena has a `grid-template-columns: "1fr 1fr"` side-by-side layout for the two model output cards, with a separate ELO scoreboard section at the top in a `display: flex` row with model info cards. The React `Arena.tsx` uses `grid-template-columns: "1fr auto 1fr"` for the ELO display with a center VS label — this is actually correct. However the prototype's ELO cards showed `ELO: 1247` in the model info chip at the top of the page (next to the model names), while React shows it in large display font below the model name. This is a structural difference in information hierarchy.
+
+**Finding 17 — WorkflowTerminal: Missing Preset Commands Sidebar**
+The prototype WorkflowTerminal has a two-column layout: `1fr 240px` with a right sidebar containing 6 preset command cards (Generate batch, Node status, Persona list, Analytics pull, Memory scan, Vault check) plus a Quick Tips panel. The React `WorkflowTerminal.tsx` renders only the terminal in a single column — the entire right sidebar with preset commands is missing.
+
+**Finding 18 — SignalFeed: Direct Lucide Imports Bypass Icon System**
+`SignalFeed.tsx` imports `Sparkles, TrendingUp, Network, TriangleAlert, Settings` directly from `lucide-react` instead of using the `<Icon>` component. This bypasses the unified icon system, creates inconsistent icon sizing (no `strokeWidth` standardization), and will break if the icon map is ever centralized for theming.
+
+**Finding 19 — `animate-pulse` Tailwind Class May Not Work in v4**
+`Skeleton.tsx` and `SkeletonList` use `animate-pulse` which is a Tailwind utility. In Tailwind v4, the `@tailwindcss/vite` plugin handles utilities differently — `animate-pulse` should still work but needs verification since the project uses `tailwindcss: "^4.3.0"`. If the pulse animation is not visible, skeletons appear as static grey shapes.
+
+**Finding 20 — `flex flex-col items-center` Tailwind Classes in EmptyState**
+`EmptyState.tsx` uses `className="flex flex-col items-center justify-center py-16 gap-4 text-center"` — these are Tailwind utility classes. The project's `tailwind.config.ts` `content` array includes `'./src/**/*.{ts,tsx}'` so these will be scanned. However, mixing Tailwind utility classes with the CSS variable class system (`glass`, `h-sm`, `txt-2`) creates an inconsistency in approach. `ErrorBoundary.tsx` also uses `p-8`, `text-center`, `max-w-md` — same inconsistency.
+
+---
+
+### 🟡 Component Structure Issues
+
+**Finding 21 — `EmptyState` and `ErrorBoundary` Colocated in One File**
+`src/design-system/feedback/EmptyState.tsx` exports both `EmptyState` and `ErrorBoundary` — two completely different component types with different concerns in the same file. `ErrorBoundary` is a class component, `EmptyState` is a functional component. They should be in separate files (`EmptyState.tsx` and `ErrorBoundary.tsx`).
+
+**Finding 22 — Pages Using Mixed Inline Style and CSS Classes Inconsistently**
+Across all pages, there is a mixed pattern: some elements use `style={{ fontSize: 10 }}` while similar elements nearby use `className="mono txt-2"`. Some use `style={{ marginBottom: 22 }}` while others are wrapped in explicit CSS class containers. This is expected in a migration but creates maintenance friction. Not a visual bug — a code quality flag.
+
+**Finding 23 — `AccountQuota.tsx` Has `(user as any)?.plan` Cast**
+`AccountQuota.tsx` line 11: `const currentPlan = PLANS.find(p => p.id === (user as any)?.plan)`. The `User` type in `src/types/user.ts` likely does not have a `plan` field, so a dangerous `any` cast was used. This TypeScript escape hatch signals that the `User` type is incomplete relative to what the component needs.
+
+**Finding 24 — `main.tsx` Not Audited Yet**
+The app entry point was not yet inspected. Need to confirm `checkSession()` is called on boot, `QueryClientProvider` wraps the app, and `RouterProvider` is the root render.
+
+---
+
+## RECOVERY PLAN
+
+---
+
+## Phase 1 — Structural Fixes (UX Architect)
+
+*Fix the DOM hierarchy gaps that cause layout-level visual regressions. These are the most impactful fixes — they change how the shell looks on every authenticated page.*
+
+### 1.1 — Sidebar: Restore User Identity Widget
+**File:** `src/layouts/Sidebar.tsx`
+
+Add the user section between the logo block and the `<nav>` block, reading from `useAuthStore().user`:
+```
+Logo block
+─────────────── (border)
+[User Avatar] [Handle]     [● dot]
+              [ELITE TIER chip]
+─────────────── (border)  
+<nav> ... </nav>
+─────────────── (border)
+Sign Out link
+```
+The avatar is a 30×30 circular div with `background: linear-gradient(135deg, #7c3aed, #00e5ff)`, showing the first character of the handle. The tier badge uses `.mono .txt-a` (amber) at `fontSize: 10`. The pulse dot sits flush right.
+
+### 1.2 — Topbar: Restore Correct Title Typography + Missing Actions
+**File:** `src/layouts/Topbar.tsx`
+
+Change the page title from `<h1 className="mono">` (Space Mono, 12px, txt2, weight 400) to:
+```tsx
+<div style={{ fontFamily: 'var(--ff-disp)', fontWeight: 700, fontSize: 17, letterSpacing: '-0.018em' }}>
+  {title}
+</div>
+```
+Then restore the two missing right-group elements:
+- Notifications bell button (icon: `Bell`, 15px) with an amber `5×5` dot at `top: 6, right: 6`
+- `New Generation` primary button linking to `/generate`
+
+The right group order should be: `⌘K` → `Bell` → `Generate button`.
+
+### 1.3 — Dashboard: Restore Complete 4-Stat Grid
+**File:** `src/pages/app/Dashboard.tsx`
+
+Replace the current 4-stat grid. The correct stats matching the prototype are:
+1. `TOTAL REPLIES` — target `2847` — icon `chat_bubble` — color `var(--cyan)`
+2. `TOKENS USED` — target `89420` — icon `memory` — color `#a78bfa`
+3. `WIN RATE` — target `91`, suffix `%` — icon `emoji_events` — color `var(--amber)`
+4. `ACTIVE NODES` — static `4 / 8` — icon `hub` — color `var(--green)`
+
+### 1.4 — Dashboard: Restore Sparkline + Quota Widgets
+**File:** `src/pages/app/Dashboard.tsx`
+
+In the left column, add the sparkline above Quick Launch:
+```tsx
+// Sparkline widget with ACTIVITY — 12H label and LIVE chip
+// 12 bar divs: [38,62,44,78,58,88,72,94,68,86,90,83]
+// height: `${(v/max)*100}%`, background: linear-gradient(to top, cyan, violet)
+```
+
+In the right column, add the Quota widget as the third item (below Node Status):
+```tsx
+// QUOTA USAGE label
+// API Calls: ProgressBar value={84} color="var(--cyan)"
+// Storage: ProgressBar value={24} color="#a78bfa"
+// "Upgrade Plan →" btn-g button linking to /account
+```
+
+### 1.5 — WorkflowTerminal: Restore Preset Commands Sidebar
+**File:** `src/pages/app/WorkflowTerminal.tsx`
+
+Change layout from single-column to `grid-template-columns: "1fr 240px"`. Add right sidebar with:
+- 6 preset command cards (Generate batch, Node status, Persona list, Analytics pull, Memory scan, Vault check) — each clickable to execute that command in the terminal
+- Quick Tips panel below
+
+### 1.6 — Router: Fix Duplicate `/sandbox` Route + Path Slashes
+**File:** `src/router/index.tsx`
+
+Remove the duplicate top-level `/sandbox` route definition. Keep only the one inside the `AppShell` children with the `AdminRoute` wrapper. Verify all child route paths inside the `AppShell` layout route use consistent path format — add the leading slash `'dashboard'` → `'/dashboard'` for explicit absolute routing.
+
+### 1.7 — Verify `main.tsx` Boot Sequence
+**File:** `src/main.tsx`
+
+Confirm it calls `useAuthStore.getState().checkSession()` before or inside the root render, wraps with `QueryClientProvider`, and `StrictMode` is present.
+
+---
+
+## Phase 2 — Aesthetic Synchronization (UI Designer)
+
+*Restore every visual token, interaction, and micro-detail to match the prototype exactly.*
+
+### 2.1 — Landing Page: Restore Prototype Stats with Dividers
+**File:** `src/pages/public/Landing.tsx`
+
+Replace the 4-stat array with the prototype's 7-element array (4 stats + 3 dividers):
+```tsx
+// Prototype pattern:
+[["2.4M+", "REPLIES GENERATED"], null, ["98.7%", "UPTIME SLA"], null, ["<180ms", "AVG LATENCY"], null, ["47K+", "ACTIVE NODES"]]
+// null = vertical divider: <div style={{ width: 1, height: 38, background: 'var(--border)' }}>
+```
+
+### 2.2 — Arena: Restore Model Info Chips in Header
+**File:** `src/pages/app/Arena.tsx`
+
+Add model info display chips to the page header area (right side of the title row), matching the prototype:
+```tsx
+// For each model: glass card with colored dot, model name in mono, ELO score in mono txt-2
+// Displayed as a flex row next to the page title
+```
+
+### 2.3 — SignalFeed: Migrate to Icon System
+**File:** `src/pages/app/SignalFeed.tsx`
+
+Replace direct `lucide-react` imports (`Sparkles, TrendingUp, Network, TriangleAlert, Settings`) with `<Icon name="auto_awesome" />`, `<Icon name="trending_up" />`, `<Icon name="hub" />`, `<Icon name="warning" />`, `<Icon name="settings" />` using the unified `Icon` component.
+
+### 2.4 — Topbar: Restore Notification Bell Visual Detail
+**File:** `src/layouts/Topbar.tsx` *(continues from 1.2)*
+
+The bell button has a specific amber dot indicator:
+```tsx
+<button style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', position: 'relative' }}>
+  <Icon name="notifications" size={15} />
+  <div style={{ position: 'absolute', top: 6, right: 6, width: 5, height: 5, borderRadius: '50%', background: 'var(--amber)', boxShadow: '0 0 5px rgba(245,158,11,0.6)' }} />
+</button>
+```
+The hover state transitions border to `var(--border2)` and icon color to `var(--cyan)`.
+
+### 2.5 — Sidebar Footer: Restore Sign Out Link
+**File:** `src/layouts/Sidebar.tsx`
+
+The current footer only has the pulse dot + status text. Restore the `Sign Out` link as a `.slink` styled element with the `logout` icon, wired to `useAuthStore().logout()`.
+
+### 2.6 — ParticleCanvas: Clean Up Double `if (ctx)` Guards
+**File:** `src/design-system/effects/ParticleCanvas.tsx`
+
+Remove the duplicated `if (ctx) { if (ctx) { ... } }` nested guards. Replace with a single null assertion after the initial guard at the top of the draw function.
+
+### 2.7 — EmptyState: Remove Tailwind Utility Classes, Use CSS Variables
+**File:** `src/design-system/feedback/EmptyState.tsx`
+
+Replace `className="flex flex-col items-center justify-center py-16 gap-4 text-center"` with inline styles using CSS variables, consistent with every other component in the system. This is not a functional bug but a consistency regression. Same for `ErrorBoundary`'s `p-8`, `text-center`, `max-w-md` usage.
+
+### 2.8 — Skeleton: Verify `animate-pulse` in Tailwind v4
+**File:** `src/design-system/feedback/Skeleton.tsx`
+
+Confirm `animate-pulse` works in the Tailwind v4 + `@tailwindcss/vite` setup. If it does not produce the pulsing animation, replace with a custom `@keyframes` shimmer defined in `components.css`:
+```css
+@keyframes skeleton-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+```
+
+### 2.9 — `lucide-react` Version Audit
+**File:** `package.json` → `Icon.tsx`
+
+Verify that all named imports in `Icon.tsx` (`Brain`, `Sparkles`, `Network`, `HardDrive`, `Trophy`, etc.) actually exist in the installed `lucide-react@1.16.0`. Run a quick import test or check the v1.x changelog for renamed exports. In particular: `Stars`, `Wand2`, `Radar`, `Crosshair` — these have been renamed in some versions. Any that are `undefined` in the map cause silent null renders.
+
+---
+
+## Phase 3 — Component Refactoring (Frontend Developer)
+
+*Clean up structural issues, type gaps, and component boundary violations without touching design.*
+
+### 3.1 — Split `EmptyState.tsx` + `ErrorBoundary.tsx`
+**File:** `src/design-system/feedback/EmptyState.tsx` → split into two files
+
+Move `ErrorBoundary` class component to `src/design-system/feedback/ErrorBoundary.tsx`. Update `src/design-system/feedback/index.ts` barrel to export from both. Update all import sites (`AppShell.tsx`, `router/index.tsx`) to import `ErrorBoundary` from the new path.
+
+### 3.2 — Fix `User` Type: Add `plan` Field
+**File:** `src/types/user.ts` + `src/pages/app/AccountQuota.tsx`
+
+Add `plan?: string` to the `User` interface so `AccountQuota.tsx` can remove the `(user as any)` cast. Confirm what plan IDs `PLANS` in `src/data/plans.ts` uses and align the type.
+
+### 3.3 — NeuralReply: Remove Stale Stub Comment
+**File:** `src/pages/app/NeuralReply.tsx`
+
+Remove the `// Phase 5.2 — NeuralReply: Full implementation coming in Phase 5 // Stub provided so router compiles cleanly.` comment from line 1. The implementation is real; the comment is misleading.
+
+### 3.4 — Sidebar: Extract `NAV` Config to `src/data/nav.ts`
+**File:** `src/layouts/Sidebar.tsx` → `src/data/nav.ts`
+
+The `NAV` array (5 sections, 20 items) defined inline in `Sidebar.tsx` should be extracted to a data file. `CommandPalette.tsx` also has its own `COMMANDS` array covering the same pages with different structure. These two configs should share a single source of truth to prevent divergence as pages are added.
+
+### 3.5 — WorkflowTerminal: Extract `RESPONSES` to Data File
+**File:** `src/pages/app/WorkflowTerminal.tsx` → `src/data/mock/terminalCommands.ts`
+
+The `RESPONSES` record and the preset commands array should be moved to `src/data/mock/terminalCommands.ts`. The component should import them. This matches the pattern used by every other data-heavy page.
+
+### 3.6 — Verify `main.tsx` and Add `checkSession` Boot Call
+**File:** `src/main.tsx`
+
+Confirm the app calls `useAuthStore.getState().checkSession()` on boot so the `isLoading: true` initial state resolves before protected routes attempt to render. Without this, `ProtectedRoute` returning `null` while `isLoading` is true creates a blank flash on every page load.
+
+### 3.7 — Dashboard `StatCard`: Extract to Shared Component
+**File:** `src/pages/app/Dashboard.tsx`
+
+The `StatCard` sub-component defined inline at the top of `Dashboard.tsx` is reused only within that file — this is fine. But it should be moved below the imports and above `QUICK_LAUNCH` with a proper JSDoc comment, not silently buried between imports and the page component.
+
+### 3.8 — Arena: Add `useCallback` to `vote` Function
+**File:** `src/pages/app/Arena.tsx`
+
+The `vote` function is called from button `onClick` but is not wrapped in `useCallback`. While not causing a visible bug, it creates a new function reference on every render. Wrap with `useCallback([])` since it only uses `setElo` (stable setter reference).
+
+---
+
+## Summary Table
+
+| # | Phase | File | Issue | Severity |
+|---|-------|------|-------|----------|
+| 1.1 | Structural | `Sidebar.tsx` | Missing user identity widget | 🔴 |
+| 1.2 | Structural | `Topbar.tsx` | Wrong title font + missing bell + missing generate button | 🔴 |
+| 1.3 | Structural | `Dashboard.tsx` | Wrong stat set (missing Tokens Used, wrong second stat) | 🔴 |
+| 1.4 | Structural | `Dashboard.tsx` | Missing sparkline widget + missing quota widget | 🔴 |
+| 1.5 | Structural | `WorkflowTerminal.tsx` | Missing entire preset commands right sidebar | 🔴 |
+| 1.6 | Structural | `router/index.tsx` | Duplicate `/sandbox` route + path format inconsistency | 🟠 |
+| 1.7 | Structural | `main.tsx` | `checkSession()` boot call unverified | 🟠 |
+| 2.1 | Aesthetic | `Landing.tsx` | Wrong stats + missing stat dividers | 🔴 |
+| 2.2 | Aesthetic | `Arena.tsx` | Missing model ELO chips in header | 🟠 |
+| 2.3 | Aesthetic | `SignalFeed.tsx` | Bypasses Icon system with direct Lucide imports | 🟡 |
+| 2.4 | Aesthetic | `Topbar.tsx` | Bell amber dot exact styling | 🟠 |
+| 2.5 | Aesthetic | `Sidebar.tsx` | Missing Sign Out link in footer | 🟠 |
+| 2.6 | Aesthetic | `ParticleCanvas.tsx` | Double `if (ctx)` nested guard | 🟡 |
+| 2.7 | Aesthetic | `EmptyState.tsx` | Tailwind utility classes break style consistency | 🟡 |
+| 2.8 | Aesthetic | `Skeleton.tsx` | `animate-pulse` unverified in Tailwind v4 | 🟡 |
+| 2.9 | Aesthetic | `Icon.tsx` | `lucide-react@1.x` named exports unverified | 🟠 |
+| 3.1 | Refactor | `EmptyState.tsx` | `EmptyState` + `ErrorBoundary` colocated | 🟡 |
+| 3.2 | Refactor | `types/user.ts` | Missing `plan` field, `any` cast in AccountQuota | 🟡 |
+| 3.3 | Refactor | `NeuralReply.tsx` | Stale stub comment on implemented page | 🟢 |
+| 3.4 | Refactor | `Sidebar.tsx` + `CommandPalette.tsx` | NAV config duplicated across two files | 🟡 |
+| 3.5 | Refactor | `WorkflowTerminal.tsx` | Terminal responses hardcoded inline | 🟡 |
+| 3.6 | Refactor | `main.tsx` | `checkSession` boot call | 🟠 |
+| 3.7 | Refactor | `Dashboard.tsx` | `StatCard` poorly positioned | 🟢 |
+| 3.8 | Refactor | `Arena.tsx` | `vote` missing `useCallback` | 🟢 |
+
+---
+
+Which phase would you like the agents to execute first?
