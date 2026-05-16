@@ -1,47 +1,75 @@
-import React from 'react';
-import { I } from '../../components/Icon';
+// SignalFeed — Live signal stream (migrated to unified Icon system)
+import { useState, useEffect } from 'react'
+import { GlassCard, Chip, Icon } from '@/design-system/primitives'
 
-const SIGNALS = [
-  { src: "Twitter", topic: "GPT-5 Architecture Leak", strength: 94, sentiment: "bullish", time: "3m ago", mentions: 12400, c: "#00aaff" },
-  { src: "Reddit", topic: "NVIDIA Blackwell Benchmarks", strength: 87, sentiment: "bullish", time: "12m ago", mentions: 8200, c: "#ff4500" },
-  { src: "Discord", topic: "Anthropic Hiring Freeze", strength: 72, sentiment: "bearish", time: "28m ago", mentions: 3400, c: "#5865f2" },
-  { src: "Twitter", topic: "Open Source MoE Breakthrough", strength: 89, sentiment: "bullish", time: "1h ago", mentions: 18900, c: "#00aaff" },
-  { src: "Reddit", topic: "AI Regulation EU Vote", strength: 65, sentiment: "neutral", time: "2h ago", mentions: 6700, c: "#ff4500" },
-  { src: "LinkedIn", topic: "Tech Layoffs Wave 3", strength: 78, sentiment: "bearish", time: "3h ago", mentions: 4200, c: "#0077b5" },
-];
+type SignalType = 'insight' | 'trend' | 'network' | 'alert' | 'system'
+interface Signal { id: number; type: SignalType; text: string; time: string; persona?: string }
 
-export function SignalFeed({ nav }: { nav: (path: string) => void }) {
+const INITIAL_SIGNALS: Signal[] = [
+  { id: 1, type: 'trend',   text: 'Thread "AI infrastructure debate" trending. 847 replies generated.', time: '2m ago', persona: 'Nexus Architect' },
+  { id: 2, type: 'insight', text: 'Engagement peak detected: 8:30pm EST window. Reply velocity +23%.', time: '8m ago' },
+  { id: 3, type: 'network', text: 'NODE-ALPHA exceeded 1,000 replies this session.', time: '14m ago' },
+  { id: 4, type: 'alert',   text: 'NODE-EPSILON went offline. Investigate platform connection.', time: '22m ago' },
+  { id: 5, type: 'system',  text: 'Model latency increased by 18ms. Switched to Claude 3.5 Sonnet.', time: '1h ago' },
+]
+
+// Unified Icon system names — no direct lucide-react imports
+const TYPE_ICON: Record<SignalType, string> = {
+  insight: 'auto_awesome',
+  trend:   'trending_up',
+  network: 'hub',
+  alert:   'warning',
+  system:  'settings',
+}
+const TYPE_COLOR: Record<SignalType, string> = {
+  insight: 'var(--cyan)',
+  trend:   'var(--amber)',
+  network: '#a78bfa',
+  alert:   'var(--red)',
+  system:  'var(--txt3)',
+}
+
+export default function SignalFeed() {
+  const [signals, setSignals] = useState<Signal[]>(INITIAL_SIGNALS)
+
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setSignals(s => [{
+        id: Date.now(),
+        type: 'trend',
+        text: `New engagement spike detected on ${['Twitter', 'LinkedIn', 'Reddit'][Math.floor(Math.random() * 3)]}.`,
+        time: 'just now',
+      }, ...s.slice(0, 19)])
+    }, 8000)
+    return () => clearInterval(iv)
+  }, [])
+
   return (
     <div className="enter">
-      <div style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-        <div>
-          <h1 className="h-md"><span className="grad-c">Signal Feed</span></h1>
-          <p style={{ color: "var(--txt2)", fontSize: 13.5, marginTop: 4 }}>Real-time trend detection · <span style={{ color: "var(--green)" }}>6 active signals</span></p>
-        </div>
-        <div className="dot" style={{ width: 8, height: 8 }} />
+      <div style={{ marginBottom: 22 }}>
+        <Chip variant="amber" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>LIVE FEED</Chip>
+        <h1 className="h-md">Signal <span className="txt-a">Feed</span></h1>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {SIGNALS.map((s, i) => (
-          <div key={i} className="card-out hover-glow">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <span style={{ fontFamily: "var(--ff-mono)", fontSize: 10, color: s.c, background: `${s.c}18`, border: `1px solid ${s.c}2e`, padding: "2px 9px", borderRadius: 999 }}>{s.src.toUpperCase()}</span>
-                <span style={{ fontWeight: 700, fontSize: 15 }}>{s.topic}</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {signals.map(s => {
+          const iconName = TYPE_ICON[s.type]
+          const color    = TYPE_COLOR[s.type]
+          return (
+            <GlassCard key={s.id} style={{ padding: '14px 18px', display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'enter 0.3s ease forwards' } as React.CSSProperties}>
+              <div className="icon-box" style={{ width: 34, height: 34, background: `${color}14`, border: `1px solid ${color}25`, flexShrink: 0 }}>
+                <Icon name={iconName} size={15} color={color} aria-hidden />
               </div>
-              <span className="mono txt-2" style={{ fontSize: 10 }}>{s.time}</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <div style={{ flex: 1 }}>
-                <div className="pt"><div className="pf" style={{ width: `${s.strength}%`, background: s.strength > 80 ? "var(--green)" : s.strength > 60 ? "var(--amber)" : "var(--red)" }} /></div>
+                <div style={{ fontSize: 13, lineHeight: 1.55, marginBottom: 4 }}>{s.text}</div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <span className="mono txt-2" style={{ fontSize: 9 }}>{s.time}</span>
+                  {s.persona && <span className="chip chip-v" style={{ fontSize: 9 }}>{s.persona}</span>}
+                </div>
               </div>
-              <span className="mono" style={{ fontSize: 11, color: s.strength > 80 ? "var(--green)" : "var(--amber)" }}>{s.strength}%</span>
-              <span className={`chip ${s.sentiment === "bullish" ? "chip-g" : s.sentiment === "bearish" ? "chip-r" : "chip-c"}`} style={{ fontSize: 10 }}>{s.sentiment.toUpperCase()}</span>
-              <span className="mono txt-2" style={{ fontSize: 10 }}>{s.mentions.toLocaleString()} mentions</span>
-              <button className="btn-g btn-sm" onClick={() => nav("generate")}><I n="auto_awesome" s={11} /> Generate</button>
-            </div>
-          </div>
-        ))}
+            </GlassCard>
+          )
+        })}
       </div>
     </div>
-  );
+  )
 }

@@ -1,0 +1,12 @@
+/* ═══════════════════════════════════════════════════════════════
+   SHADOW NODE — STYLE ENTRY POINT
+   Import order matters: tokens → base → Tailwind → components
+═══════════════════════════════════════════════════════════════ */
+
+@import './tokens.css';
+@import './base.css';
+
+/* Tailwind CSS v4 */
+@import 'tailwindcss';
+
+@import './components.css';

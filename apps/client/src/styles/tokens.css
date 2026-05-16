@@ -1,0 +1,54 @@
+/* ═══════════════════════════════════════════════════════════════
+   SHADOW NODE — DESIGN TOKENS
+   All CSS custom properties migrated exactly from prototype.
+   Every --var is referenced in components.css and Tailwind config.
+═══════════════════════════════════════════════════════════════ */
+:root {
+  /* ── COLOR PALETTE ── */
+  --void:          #040810;
+  --deep:          #070d1f;
+  --surface:       #0c1627;
+  --card:          rgba(10, 18, 38, 0.75);
+  --card-hi:       rgba(14, 24, 50, 0.88);
+
+  --cyan:          #00e5ff;
+  --cyan-glow:     rgba(0, 229, 255, 0.22);
+
+  --violet:        #7c3aed;
+  --violet-dim:    #5b21b6;
+  --violet-glow:   rgba(124, 58, 237, 0.22);
+
+  --amber:         #f59e0b;
+  --amber-glow:    rgba(245, 158, 11, 0.18);
+
+  --green:         #34d399;
+  --red:           #f87171;
+
+  --txt:           #e2e8f0;
+  --txt2:          #94a3b8;
+  --txt3:          #475569;
+
+  --border:        rgba(0, 229, 255, 0.1);
+  --border2:       rgba(0, 229, 255, 0.28);
+  --border-v:      rgba(124, 58, 237, 0.28);
+
+  /* ── TYPOGRAPHY ── */
+  --ff-disp:  'Syne', sans-serif;
+  --ff-body:  'Outfit', sans-serif;
+  --ff-mono:  'Space Mono', monospace;
+
+  /* ── BORDER RADIUS ── */
+  --r-sm:    6px;
+  --r-md:    10px;
+  --r-lg:    14px;
+  --r-xl:    20px;
+  --r-pill:  9999px;
+
+  /* ── TRANSITIONS ── */
+  --t-fast:  140ms ease;
+  --t-mid:   280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-slow:  540ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── LAYOUT ── */
+  --sw: 240px;  /* sidebar width */
+}

@@ -1,0 +1,39 @@
+/* ═══════════════════════════════════════════════════════════════
+   SHADOW NODE — BASE RESET & GLOBAL STYLES
+═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--void);
+  color: var(--txt);
+  font-family: var(--ff-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--deep); }
+::-webkit-scrollbar-thumb { background: var(--violet-dim); border-radius: 99px; }
+
+/* ── SELECTION ── */
+::selection {
+  background: rgba(0, 229, 255, 0.18);
+  color: var(--cyan);
+}
+
+/* ── BASE ELEMENTS ── */
+button { cursor: pointer; font-family: var(--ff-body); }
+input, textarea, select { font-family: var(--ff-body); }
+a { text-decoration: none; color: inherit; }
