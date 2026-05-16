@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GlassCard, Icon, Button, Chip } from '@/design-system/primitives'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
+import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
 
 const SAMPLE_PROMPTS = [
   { label: 'Technical Authority', text: 'Most teams building on top of GPT-4 are optimizing for cost, not quality. The real alpha is in evaluation pipelines.' },
@@ -43,7 +44,8 @@ export default function Calibrate() {
   }, [selectedPrompt])
 
   return (
-    <div style={{ background: 'var(--void)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }} className="scan enter">
+    <div style={{ background: 'var(--void)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40 }} className="enter">
+      <ScanlineOverlay />
       <ParticleCanvas density={0.2} />
       <div style={{ width: '100%', maxWidth: 840, position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: 36 }}>

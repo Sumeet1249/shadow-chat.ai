@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { ProtectedRoute, AdminRoute, PublicRoute } from './guards'
 import { AppShell } from '@/layouts/AppShell'
 import { SkeletonList } from '@/design-system/feedback/Skeleton'
@@ -153,6 +153,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/404" replace />,
+    element: wrap(<NotFound />),
   },
 ])

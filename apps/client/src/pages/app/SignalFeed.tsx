@@ -1,74 +1,147 @@
-// SignalFeed — Live signal stream (migrated to unified Icon system)
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { GlassCard, Chip, Icon } from '@/design-system/primitives'
 
-type SignalType = 'insight' | 'trend' | 'network' | 'alert' | 'system'
-interface Signal { id: number; type: SignalType; text: string; time: string; persona?: string }
+const FILTERS = ['All', 'Generated', 'Engagement', 'Nodes', 'Alerts']
 
-const INITIAL_SIGNALS: Signal[] = [
-  { id: 1, type: 'trend',   text: 'Thread "AI infrastructure debate" trending. 847 replies generated.', time: '2m ago', persona: 'Nexus Architect' },
-  { id: 2, type: 'insight', text: 'Engagement peak detected: 8:30pm EST window. Reply velocity +23%.', time: '8m ago' },
-  { id: 3, type: 'network', text: 'NODE-ALPHA exceeded 1,000 replies this session.', time: '14m ago' },
-  { id: 4, type: 'alert',   text: 'NODE-EPSILON went offline. Investigate platform connection.', time: '22m ago' },
-  { id: 5, type: 'system',  text: 'Model latency increased by 18ms. Switched to Claude 3.5 Sonnet.', time: '1h ago' },
+const FEED_ITEMS = [
+  {
+    id: 1,
+    title: 'Reply generated for @elonmusk thread',
+    persona: 'Nexus Architect',
+    platform: 'TWITTER',
+    type: 'GENERATED',
+    time: '12s ago',
+    icon: 'forum',
+    color: 'var(--cyan)'
+  },
+  {
+    id: 2,
+    title: '+847 engagements on viral take about AI infra',
+    persona: 'Nexus Architect',
+    platform: 'TWITTER',
+    type: 'VIRAL',
+    time: '2m ago',
+    icon: 'trending_up',
+    color: 'var(--amber)'
+  },
+  {
+    id: 3,
+    title: 'NODE-ALPHA processed 42 requests in last 5 min',
+    type: 'OPERATIONAL',
+    time: '3m ago',
+    icon: 'hub',
+    color: 'var(--cyan)'
+  },
+  {
+    id: 4,
+    title: "LinkedIn post drafted: 'After 3 years in ML...'",
+    persona: 'Corporate Phantom',
+    platform: 'LINKEDIN',
+    type: 'GENERATED',
+    time: '8m ago',
+    icon: 'edit_note',
+    color: '#a78bfa'
+  },
+  {
+    id: 5,
+    title: "NODE-GAMMA idle for 2+ hours â€” consider activation",
+    type: 'WARNING',
+    time: '14m ago',
+    icon: 'warning',
+    color: 'var(--red)'
+  },
+  {
+    id: 6,
+    title: '+1.2K upvotes on RAG vs fine-tuning reply',
+    persona: 'Ghost Analyst',
+    platform: 'REDDIT',
+    type: 'TOP',
+    time: '22m ago',
+    icon: 'trending_up',
+    color: 'var(--amber)'
+  },
+  {
+    id: 7,
+    title: 'Model switched to claude-3.5-sonnet (lower latency)',
+    type: 'SYSTEM',
+    time: '35m ago',
+    icon: 'settings_input_antenna',
+    color: 'var(--cyan)'
+  }
 ]
 
-// Unified Icon system names — no direct lucide-react imports
-const TYPE_ICON: Record<SignalType, string> = {
-  insight: 'auto_awesome',
-  trend:   'trending_up',
-  network: 'hub',
-  alert:   'warning',
-  system:  'settings',
-}
-const TYPE_COLOR: Record<SignalType, string> = {
-  insight: 'var(--cyan)',
-  trend:   'var(--amber)',
-  network: '#a78bfa',
-  alert:   'var(--red)',
-  system:  'var(--txt3)',
-}
-
 export default function SignalFeed() {
-  const [signals, setSignals] = useState<Signal[]>(INITIAL_SIGNALS)
-
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setSignals(s => [{
-        id: Date.now(),
-        type: 'trend',
-        text: `New engagement spike detected on ${['Twitter', 'LinkedIn', 'Reddit'][Math.floor(Math.random() * 3)]}.`,
-        time: 'just now',
-      }, ...s.slice(0, 19)])
-    }, 8000)
-    return () => clearInterval(iv)
-  }, [])
+  const [activeFilter, setActiveFilter] = useState('All')
 
   return (
     <div className="enter">
-      <div style={{ marginBottom: 22 }}>
-        <Chip variant="amber" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>LIVE FEED</Chip>
-        <h1 className="h-md">Signal <span className="txt-a">Feed</span></h1>
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <Chip variant="cyan" size="sm" style={{ marginBottom: 12, display: 'inline-flex', gap: 6 } as React.CSSProperties}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--green)', boxShadow: '0 0 8px var(--green)' }} />
+          LIVE
+        </Chip>
+        <h1 className="h-lg" style={{ fontSize: 44, marginBottom: 8 }}>
+          Signal <span className="grad-c">Feed</span>
+        </h1>
+        <p className="txt-2" style={{ fontSize: 15 }}>Real-time activity stream across all nodes and platforms.</p>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {signals.map(s => {
-          const iconName = TYPE_ICON[s.type]
-          const color    = TYPE_COLOR[s.type]
-          return (
-            <GlassCard key={s.id} style={{ padding: '14px 18px', display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'enter 0.3s ease forwards' } as React.CSSProperties}>
-              <div className="icon-box" style={{ width: 34, height: 34, background: `${color}14`, border: `1px solid ${color}25`, flexShrink: 0 }}>
-                <Icon name={iconName} size={15} color={color} aria-hidden />
+
+      {/* Filter Tabs */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 32 }}>
+        {FILTERS.map(f => (
+          <button
+            key={f}
+            onClick={() => setActiveFilter(f)}
+            style={{
+              padding: '8px 18px',
+              borderRadius: 'var(--r-pill)',
+              border: '1px solid var(--border)',
+              background: activeFilter === f ? 'var(--cyan)' : 'rgba(255,255,255,0.03)',
+              color: activeFilter === f ? 'var(--void)' : 'var(--txt2)',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all var(--t-fast)'
+            }}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {/* Feed List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {FEED_ITEMS.map(item => (
+          <GlassCard key={item.id} style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 20 } as React.CSSProperties}>
+            <div style={{ 
+              width: 44, 
+              height: 44, 
+              borderRadius: 12, 
+              background: `${item.color}15`, 
+              border: `1px solid ${item.color}30`, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <Icon name={item.icon} size={18} color={item.color} />
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="h-sm" style={{ fontSize: 16, marginBottom: 10, color: 'var(--txt)' }}>{item.title}</div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {item.persona && <Chip variant="violet" size="sm" style={{ fontSize: 9 }}>{item.persona.toUpperCase()}</Chip>}
+                {item.platform && <Chip variant="cyan" size="sm" style={{ fontSize: 9 }}>{item.platform}</Chip>}
+                <Chip variant={item.type === 'WARNING' ? 'red' : item.type === 'OPERATIONAL' ? 'green' : item.type === 'VIRAL' || item.type === 'TOP' ? 'amber' : 'cyan'} size="sm" style={{ fontSize: 9 }}>{item.type}</Chip>
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, lineHeight: 1.55, marginBottom: 4 }}>{s.text}</div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <span className="mono txt-2" style={{ fontSize: 9 }}>{s.time}</span>
-                  {s.persona && <span className="chip chip-v" style={{ fontSize: 9 }}>{s.persona}</span>}
-                </div>
-              </div>
-            </GlassCard>
-          )
-        })}
+            </div>
+
+            <div className="mono txt-3" style={{ fontSize: 11, flexShrink: 0 }}>
+              {item.time}
+            </div>
+          </GlassCard>
+        ))}
       </div>
     </div>
   )

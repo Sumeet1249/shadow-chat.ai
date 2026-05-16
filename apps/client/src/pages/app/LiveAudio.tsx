@@ -1,113 +1,142 @@
-// LiveAudio — Phase 7.8 stub
 import { useState, useRef, useEffect } from 'react'
 import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
-import { useReducedMotion } from 'framer-motion'
 
-const TRANSCRIPT_LINES = [
-  'So I think the key insight here is that language models are fundamentally pattern matching machines...',
-  'And what that means for your go-to-market is you need to focus on the evaluation layer...',
-  'The teams winning right now are building custom evals before they build the product...',
+const TRANSCRIPT_SAMPLES = [
+  "So the core thesis here is that retrieval is the new training. Instead of fine-tuning models, we focus on high-fidelity context injection.",
+  "Which means our latency needs to be sub-200ms at the edge. The user experience depends entirely on the feedback loop speed.",
+  "I agree. Most teams build the model first, but the winning strategy is building the evaluation pipeline first. That's the real alpha."
 ]
 
 export default function LiveAudio() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef = useRef<number>(0)
   const [recording, setRecording] = useState(false)
   const [transcript, setTranscript] = useState<string[]>([])
-  const [lineIdx, setLineIdx] = useState(0)
-  const [output, setOutput] = useState('')
-  const shouldReduceMotion = useReducedMotion()
+  const [reply, setReply] = useState('')
+  const [generating, setGenerating] = useState(false)
+  
+  // Fingerprint animation bars
+  const [bars, setBars] = useState(Array.from({ length: 24 }, () => 10 + Math.random() * 40))
 
-  // Waveform canvas
   useEffect(() => {
-    if (shouldReduceMotion) return
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    canvas.width = canvas.offsetWidth * devicePixelRatio
-    canvas.height = canvas.offsetHeight * devicePixelRatio
-    ctx.scale(devicePixelRatio, devicePixelRatio)
-    let t = 0
-    const draw = () => {
-      const W = canvas.offsetWidth, H = canvas.offsetHeight
-      ctx.clearRect(0, 0, W, H)
-      const bars = 48
-      for (let i = 0; i < bars; i++) {
-        const h = recording ? 4 + Math.abs(Math.sin(t + i * 0.35)) * (H - 8) * 0.7 : 4
-        const x = (i / bars) * W
-        ctx.fillStyle = `rgba(0,229,255,${recording ? 0.6 : 0.15})`
-        ctx.fillRect(x, (H - h) / 2, W / bars - 2, h)
-      }
-      t += 0.08
-      animRef.current = requestAnimationFrame(draw)
+    let iv: any
+    if (recording) {
+      iv = setInterval(() => {
+        setBars(prev => prev.map(v => 5 + Math.random() * 90))
+        if (Math.random() > 0.8 && transcript.length < TRANSCRIPT_SAMPLES.length) {
+          setTranscript(prev => [...prev, TRANSCRIPT_SAMPLES[prev.length]])
+        }
+      }, 150)
+    } else {
+      setBars(prev => prev.map(() => 8))
     }
-    draw()
-    return () => cancelAnimationFrame(animRef.current)
-  }, [recording, shouldReduceMotion])
+    return () => clearInterval(iv)
+  }, [recording, transcript])
 
-  const toggleRecording = () => {
-    setRecording(r => !r)
-    if (!recording && lineIdx < TRANSCRIPT_LINES.length) {
-      const iv = setInterval(() => {
-        setTranscript(tr => {
-          const next = [...tr, TRANSCRIPT_LINES[tr.length % TRANSCRIPT_LINES.length]]
-          return next
-        })
-        setLineIdx(i => i + 1)
-      }, 4000)
-      setTimeout(() => clearInterval(iv), 12000)
-    }
-  }
-
-  const genReply = () => {
-    if (transcript.length === 0) return
-    setOutput('Based on the conversation, here\'s a tactical reply: The evaluation-first approach you\'re describing aligns with what the top 5% of ML teams are doing. Most teams build the product and then wonder why it doesn\'t work in production. The eval gap is where all the value lives.')
+  const generateReply = () => {
+    setGenerating(true)
+    setReply('')
+    setTimeout(() => {
+      setReply("Tactical Reply: The 'retrieval is the new training' framework you're proposing matches the shift we're seeing in production ML. By prioritizing the evaluation pipeline before the model, you're building a system that's objectively measurable from day one.")
+      setGenerating(false)
+    }, 1500)
   }
 
   return (
     <div className="enter">
-      <div style={{ marginBottom: 22 }}>
-        <Chip variant="red" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>
-          {recording && <span className="dot" style={{ background: 'var(--red)', marginRight: 4 }} aria-hidden />}
-          {recording ? 'RECORDING' : 'LIVE AUDIO'}
-        </Chip>
-        <h1 className="h-md">Live Audio <span className="txt-c">Sync</span></h1>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+        <div>
+          <Chip variant="red" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>
+            {recording && <span className="blink" style={{ marginRight: 6 }}>●</span>}
+            {recording ? 'RECORDING_ACTIVE' : 'AUDIO_SYNC_IDLE'}
+          </Chip>
+          <h1 className="h-md">Live Audio <span className="grad-v">Sync</span></h1>
+          <p className="txt-2" style={{ fontSize: 13.5, marginTop: 4 }}>Real-time transcription and persona-aligned reply generation.</p>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button variant="ghost"><Icon name="settings" size={14} /> Mic Settings</Button>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <GlassCard variant="elevated" style={{ padding: '24px' } as React.CSSProperties}>
-            <canvas ref={canvasRef} aria-label="Audio waveform visualizer" style={{ width: '100%', height: 80, display: 'block', marginBottom: 20 }} />
-            <div style={{ textAlign: 'center' }}>
-              <Button variant={recording ? 'action' : 'primary'} onClick={toggleRecording} style={{ padding: '14px 32px', fontSize: 15 }}>
-                <Icon name={recording ? 'stop' : 'mic'} size={18} aria-hidden />
-                {recording ? 'Stop Recording' : 'Start Recording'}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 18 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          
+          {/* Waveform Card */}
+          <GlassCard style={{ padding: '40px', textAlign: 'center' } as React.CSSProperties}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 4, height: 100, marginBottom: 32 }}>
+              {bars.map((h, i) => (
+                <div key={i} style={{ width: 6, height: `${h}%`, background: recording ? 'var(--cyan)' : 'var(--border)', borderRadius: 3, transition: 'height 0.15s ease' }} />
+              ))}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+              <Button 
+                variant={recording ? 'primary' : 'ghost'} 
+                onClick={() => setRecording(!recording)}
+                style={{ padding: '14px 40px', fontSize: 15, background: recording ? 'var(--red)' : undefined, border: recording ? 'none' : undefined }}
+              >
+                <Icon name={recording ? 'stop' : 'mic'} size={18} />
+                {recording ? 'STOP CAPTURE' : 'INITIALIZE CAPTURE'}
               </Button>
             </div>
           </GlassCard>
 
-          <GlassCard style={{ padding: '20px 22px', minHeight: 140 } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 12 }}>TRANSCRIPT</div>
-            {transcript.length === 0 ? (
-              <div className="mono txt-2" style={{ fontSize: 11 }}>// Start recording to transcribe audio</div>
-            ) : (
-              transcript.map((l, i) => <p key={i} style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--txt2)', marginBottom: 8 }}>"{l}"</p>)
-            )}
+          {/* Transcript */}
+          <GlassCard style={{ padding: '24px', minHeight: 200 } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>LIVE_TRANSCRIPTION</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {transcript.map((t, i) => (
+                <div key={i} style={{ display: 'flex', gap: 12 }}>
+                  <span className="mono txt-2" style={{ fontSize: 10, marginTop: 3 }}>[00:{i*4 < 10 ? '0' : ''}{i*4}]</span>
+                  <p style={{ fontSize: 14, color: 'var(--txt2)', lineHeight: 1.6 }}>{t}</p>
+                </div>
+              ))}
+              {recording && (
+                <div style={{ display: 'flex', gap: 12, opacity: 0.5 }}>
+                  <span className="mono txt-2" style={{ fontSize: 10 }}>[--:--]</span>
+                  <p className="blink" style={{ fontSize: 14, color: 'var(--txt2)' }}>Listening...</p>
+                </div>
+              )}
+              {!recording && transcript.length === 0 && (
+                <div style={{ height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--txt3)' }}>
+                  <span className="mono" style={{ fontSize: 11 }}>// START CAPTURE TO BEGIN TRANSCRIPTION</span>
+                </div>
+              )}
+            </div>
           </GlassCard>
         </div>
 
+        {/* Sidebar: Reply Gen */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <GlassCard variant="elevated" style={{ padding: '20px 22px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 14 }}>GENERATED REPLY</div>
-            {output ? (
-              <div style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--txt2)', marginBottom: 14 }}>{output}</div>
+          <GlassCard variant="elevated" style={{ padding: '24px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>NEURAL_REPLY_SYNOPSIS</div>
+            {reply ? (
+              <div style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--txt2)', marginBottom: 20 }}>{reply}</div>
             ) : (
-              <div className="mono txt-2" style={{ fontSize: 11, marginBottom: 14 }}>// Transcribe audio first, then generate reply</div>
+              <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.1, marginBottom: 20 }}>
+                <Icon name="auto_awesome" size={48} />
+              </div>
             )}
-            <Button variant="primary" disabled={transcript.length === 0} onClick={genReply} style={{ width: '100%', justifyContent: 'center' }}>
-              <Icon name="auto_awesome" size={14} aria-hidden /> Generate Reply
+            <Button 
+              variant="primary" 
+              disabled={transcript.length === 0 || generating} 
+              onClick={generateReply}
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              <Icon name="psychology" size={14} /> {generating ? 'SYNCING...' : 'GENERATE SYNOPSIS'}
             </Button>
+          </GlassCard>
+
+          <GlassCard style={{ padding: '20px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>MIC_SETTINGS</div>
+            {[
+              { l: 'INPUT_LEVEL', v: recording ? '72%' : '0%', c: 'var(--cyan)' },
+              { l: 'SAMPLE_RATE', v: '48kHz', c: 'var(--txt3)' },
+              { l: 'NOISE_GATE', v: 'ACTIVE', c: 'var(--green)' },
+            ].map((s, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span className="mono txt-2" style={{ fontSize: 9 }}>{s.l}</span>
+                <span className="mono" style={{ fontSize: 10, color: s.c }}>{s.v}</span>
+              </div>
+            ))}
           </GlassCard>
         </div>
       </div>

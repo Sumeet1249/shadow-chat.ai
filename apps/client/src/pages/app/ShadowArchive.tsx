@@ -1,4 +1,3 @@
-// ShadowArchive — Phase 6.7 stub
 import { useState } from 'react'
 import { GlassCard, Chip, Icon, } from '@/design-system/primitives'
 import { MOCK_OUTPUTS, PLATFORM_COLORS } from '@/data/mock/outputs'

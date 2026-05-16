@@ -1,43 +1,118 @@
-// MemoryMatrix — Phase 7.3 stub
 import { useState } from 'react'
-import { GlassCard, Chip, Icon, Button } from '@/design-system/primitives'
-import { useDebounce } from '@/hooks/useDebounce'
+import { GlassCard, Chip, Icon } from '@/design-system/primitives'
 
 const MEMORIES = [
-  { id: 1, title: 'AI Infrastructure Expert',  content: 'Deep expertise in MLOps, LLM deployment, inference optimization, and distributed systems.', tags: ['AI', 'Technical'], active: true },
-  { id: 2, title: 'Competitor Intelligence',    content: 'Main competitor analysis: Jasper AI focuses on marketing copy. ShadowNode has superior persona layering.', tags: ['Strategy', 'Intelligence'], active: true },
-  { id: 3, title: 'Engagement Rules',           content: 'Always reply within 10 minutes of viral threads. Never engage trolls. Always add value before promoting.', tags: ['Rules', 'Engagement'], active: true },
-  { id: 4, title: 'Style Guide',                content: 'No corporate jargon. Short paragraphs. Bold claims backed by data. End with a question when possible.', tags: ['Style', 'Tone'], active: false },
+  {
+    id: 1,
+    key: 'ai_infrastructure',
+    tag: 'Tech/AI',
+    status: 'INJECTED',
+    time: '2h ago',
+    desc: 'Focus on edge computing, latency optimization, and ML pipeline orchestration'
+  },
+  {
+    id: 2,
+    key: 'crypto_thesis',
+    tag: 'Crypto',
+    status: 'INJECTED',
+    time: '1d ago',
+    desc: 'Bullish on L2 scaling solutions, particularly optimistic rollups with data availability layers'
+  },
+  {
+    id: 3,
+    key: 'writing_style',
+    tag: 'General',
+    status: 'INJECTED',
+    time: '3d ago',
+    desc: 'Short paragraphs, bold claims backed by data, avoid hedging language'
+  },
+  {
+    id: 4,
+    key: 'competitor_map',
+    tag: 'Business',
+    status: 'INJECTED',
+    time: '5d ago',
+    desc: 'Main competitors: Typefully, Hypefury, Tweet Hunter â€” differentiate on AI depth'
+  }
 ]
 
 export default function MemoryMatrix() {
-  const [q, setQ] = useState('')
-  const dq = useDebounce(q, 300)
-  const filtered = MEMORIES.filter(m => m.title.toLowerCase().includes(dq.toLowerCase()) || m.content.toLowerCase().includes(dq.toLowerCase()))
+  const [search, setSearch] = useState('')
 
   return (
     <div className="enter">
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 22 }}>
+      {/* Header Area */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
         <div>
-          <Chip variant="cyan" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>MEMORY</Chip>
-          <h1 className="h-md">Memory <span className="txt-c">Matrix</span></h1>
+          <Chip variant="cyan" size="sm" style={{ marginBottom: 12, display: 'inline-flex' } as React.CSSProperties}>INTELLIGENCE</Chip>
+          <h1 className="h-lg" style={{ fontSize: 44, marginBottom: 8 }}>
+            Memory <span className="grad-c">Matrix</span>
+          </h1>
+          <p className="txt-2" style={{ fontSize: 15 }}>6 entries â€¢ 4 actively injected</p>
         </div>
-        <Button variant="primary" size="sm"><Icon name="add" size={13} aria-hidden /> Add Memory</Button>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button className="btn-g" style={{ padding: '10px 20px', borderRadius: 12 }}>
+            <Icon name="hub" size={16} /> Graph View
+          </button>
+          <button className="btn-p" style={{ padding: '10px 20px', borderRadius: 12 }}>
+            <Icon name="add" size={16} /> Add Memory
+          </button>
+        </div>
       </div>
-      <input className="field" placeholder="Search memories..." value={q} onChange={e => setQ(e.target.value)} style={{ marginBottom: 16 }} aria-label="Search memory matrix" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        {filtered.map(m => (
-          <GlassCard key={m.id} style={{ padding: '20px 22px', opacity: m.active ? 1 : 0.6 } as React.CSSProperties}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-              <h3 style={{ fontWeight: 600, fontSize: 14 }}>{m.title}</h3>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button className="btn-g btn-sm" aria-label={`Edit ${m.title}`}><Icon name="edit" size={11} aria-hidden /></button>
-                <button className="btn-g btn-sm" aria-label={`Delete ${m.title}`}><Icon name="delete" size={11} color="var(--red)" aria-hidden /></button>
+
+      {/* Search Bar */}
+      <div style={{ position: 'relative', marginBottom: 32, display: 'flex', alignItems: 'center' }}>
+        <Icon name="search" size={18} color="var(--txt3)" style={{ position: 'absolute', left: 16, zIndex: 1 }} />
+        <input 
+          type="text" 
+          placeholder="Search memories..." 
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ 
+            width: '100%', 
+            background: 'rgba(255,255,255,0.03)', 
+            border: '1px solid var(--border)', 
+            borderRadius: 12, 
+            padding: '14px 14px 14px 48px',
+            color: 'var(--txt)',
+            fontSize: 14,
+            outline: 'none',
+            height: 48
+          }}
+        />
+      </div>
+
+      {/* Memory List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {MEMORIES.map(m => (
+          <GlassCard key={m.id} style={{ padding: '24px' } as React.CSSProperties}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span className="mono" style={{ fontSize: 15, fontWeight: 800, color: 'var(--cyan)' }}>{m.key}</span>
+                <Chip variant="violet" size="sm" style={{ fontSize: 9 }}>{m.tag}</Chip>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <Chip variant="green" size="sm" style={{ fontSize: 9 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--green)', marginRight: 6, display: 'inline-block' }} />
+                  {m.status}
+                </Chip>
+                <span className="mono txt-3" style={{ fontSize: 11 }}>{m.time}</span>
               </div>
             </div>
-            <p className="txt-2" style={{ fontSize: 12.5, lineHeight: 1.6, marginBottom: 12 }}>{m.content}</p>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {m.tags.map(t => <span key={t} className="chip chip-c" style={{ fontSize: 9 }}>{t}</span>)}
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <p className="txt-2" style={{ fontSize: 14, maxWidth: '80%', lineHeight: 1.6 }}>{m.desc}</p>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <Icon name="edit" size={14} color="var(--txt3)" />
+                </div>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <Icon name="toggle_on" size={14} color="var(--green)" />
+                </div>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <Icon name="delete" size={14} color="var(--red)" />
+                </div>
+              </div>
             </div>
           </GlassCard>
         ))}

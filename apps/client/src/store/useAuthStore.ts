@@ -72,15 +72,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       const res = await api.get<User>('/api/auth/me')
       set({ isAuthenticated: true, user: res.data, isLoading: false })
     } catch {
-      // Dev mode: auto-login as admin for development
-      if (import.meta.env.DEV) {
-        set({
-          isAuthenticated: true,
-          user: { handle: 'Caleb_Shadow', email: 'caleb@shadownode.ai', role: 'admin' },
-          isLoading: false,
-        })
-        return
-      }
       set({ isAuthenticated: false, user: null, isLoading: false })
     }
   },

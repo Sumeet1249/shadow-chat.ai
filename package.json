@@ -1,4 +1,18 @@
 {
-  "name": "shadow-node",
-  "version": "1.0.0"
+  "name": "shadow-chat.ai",
+  "private": true,
+  "packageManager": "pnpm@8.15.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  }
 }

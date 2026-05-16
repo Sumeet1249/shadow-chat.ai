@@ -19,7 +19,7 @@ import {
   // Data & analytics
   BarChart2, TrendingUp, Activity, LineChart, PieChart,
   // People & team
-  User, Users, UserPlus, UserCheck, Shield, Lock, Unlock, Key,
+  User, Users, UserPlus, UserCheck, Shield, ShieldOff, Lock, Unlock, Key,
   // Tech & system
   Cpu, HardDrive, Globe, Network, Radio, Wifi, Server,
   Terminal, Code, Code2, Braces, Database, Cloud, GitBranch,
@@ -34,6 +34,8 @@ import {
   ShoppingBag, Package, Gift, Tag,
   // Misc
   AlertCircle, Bell, BellOff, Calendar, Clock, Timer,
+  Rss, Store, Gamepad2,
+  AtSign, Briefcase, MessageCircle, Headphones, Mail,
   type LucideProps,
 } from 'lucide-react'
 import type { FC } from 'react'
@@ -180,7 +182,7 @@ const ICON_MAP: Record<string, FC<LucideProps>> = {
   visibility_off:  EyeOff,
   login:           ArrowRight,
   logout:          ArrowLeft,
-  upgrade:         ArrowUp,
+  upgrade:         TrendingUp,
   arrow_upward:    ArrowUp,
 
   // Misc
@@ -191,6 +193,19 @@ const ICON_MAP: Record<string, FC<LucideProps>> = {
   inventory_2:     Package,
   redeem:          Gift,
   label:           Tag,
+  openai:          Bot,
+  anthropic:       Sparkles,
+  rss_feed:        Rss,
+  storefront:      Store,
+  sports_esports:  Gamepad2,
+  alternate_email: AtSign,
+  business:        Briefcase,
+  forum:           MessageCircle,
+  groups:          Users,
+  mail:            Mail,
+  gpp_bad:         ShieldOff,
+  headset_mic:     Headphones,
+  publish:         Upload,
 }
 
 // ── Component ───────────────────────────────────────────────────

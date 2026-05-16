@@ -3,18 +3,14 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { useNavigate } from 'react-router-dom'
 import { PLANS } from '@/data/plans'
 import api from '@/lib/api'
-import React from 'react'
 
-function SubscriptionSection() {
+function SubscriptionCard() {
   const { user, checkSession } = useAuthStore()
   const navigate = useNavigate()
-  // User.plan is now properly typed in src/types/user.ts
   const currentPlan = PLANS.find(p => p.id === user?.plan) ?? PLANS[0]
 
   async function handleCancel() {
-    const confirmed = window.confirm(
-      'Cancel your subscription? You keep access until the end of your billing period.'
-    )
+    const confirmed = window.confirm('Cancel your subscription? You keep access until the end of your billing period.')
     if (!confirmed) return
     try {
       await api.post('/checkout/cancel-subscription')
@@ -25,115 +21,136 @@ function SubscriptionSection() {
   }
 
   return (
-    <GlassCard variant="elevated" style={{ border: '1px solid rgba(245, 158, 11, 0.3)', padding: '20px 22px' } as React.CSSProperties}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <GlassCard variant="elevated" style={{ border: '1px solid var(--violet)30', padding: '24px' } as React.CSSProperties}>
+      <div className="mono txt-2" style={{ fontSize: 9, marginBottom: 16 }}>SUBSCRIPTION_STATUS</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
         <div>
-          <p className="mono txt-2" style={{ fontSize: 10, marginBottom: 8 }}>CURRENT PLAN</p>
-          <Chip variant={currentPlan.chipVariant}>
-            {currentPlan.name}
-          </Chip>
-          {currentPlan.price > 0 && (
-            <p className="txt-2 text-sm mt-1" style={{ fontSize: 13, marginTop: 8 }}>
-              ${currentPlan.price}/{currentPlan.period} · Renews automatically
-            </p>
-          )}
+          <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>{currentPlan.name}</h3>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <Chip variant={currentPlan.chipVariant} size="sm">ACTIVE</Chip>
+            <span className="mono txt-2" style={{ fontSize: 10 }}>Renews on June 12, 2025</span>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <Button variant="primary" size="sm" onClick={() => navigate('/pricing')}>
-            {currentPlan.price === 0 ? 'Upgrade' : 'Change Plan'}
-          </Button>
-          {currentPlan.price > 0 && (
-            <Button variant="ghost" size="sm" onClick={handleCancel}>
-              Cancel
-            </Button>
-          )}
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: 20, fontWeight: 700 }}>${currentPlan.price}</div>
+          <div className="mono txt-2" style={{ fontSize: 9 }}>PER_MONTH</div>
         </div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button variant="primary" style={{ flex: 1, justifyContent: 'center' }} onClick={() => navigate('/pricing')}>UPGRADE</Button>
+        {currentPlan.price > 0 && <Button variant="ghost" style={{ flex: 1, justifyContent: 'center' }} onClick={handleCancel}>CANCEL</Button>}
       </div>
     </GlassCard>
   )
 }
 
-/**
- * AccountQuota — Integrated with Phase P3 Subscription Management
- */
 export default function AccountQuota() {
   const { user } = useAuthStore()
 
   return (
     <div className="enter">
-      <div style={{ marginBottom: 22 }}>
-        <Chip variant="violet" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>ACCOUNT</Chip>
-        <h1 className="h-md">Account <span className="txt-v">Settings</span></h1>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+        <div>
+          <Chip variant="violet" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>OPERATOR_SETTINGS</Chip>
+          <h1 className="h-md">Account <span className="grad-v">Management</span></h1>
+          <p className="txt-2" style={{ fontSize: 13.5, marginTop: 4 }}>Configure your identity, security, and neural resource allocation.</p>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 18 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Profile section */}
-          <GlassCard style={{ padding: '24px 26px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 18 }}>OPERATOR PROFILE</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-              <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#00e5ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: '#fff' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 18 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          
+          {/* Identity Card */}
+          <GlassCard style={{ padding: '28px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 20 }}>IDENTITY_UNIT</div>
+            <div style={{ display: 'flex', gap: 24, alignItems: 'center', marginBottom: 32 }}>
+              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,#7c3aed,#00e5ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 800, color: '#fff', boxShadow: '0 0 20px rgba(124,58,237,0.2)' }}>
                 {user?.handle?.charAt(0).toUpperCase() ?? 'S'}
               </div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 18 }}>{user?.handle ?? 'Operator'}</div>
-                <div className="mono txt-2" style={{ fontSize: 11 }}>{user?.email ?? 'operator@shadownode.ai'}</div>
-                <Chip variant={user?.role === 'admin' ? 'amber' : 'cyan'} size="sm" style={{ marginTop: 6 } as React.CSSProperties}>{user?.role?.toUpperCase() ?? 'USER'}</Chip>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 20, marginBottom: 2 }}>{user?.handle ?? 'Operator'}</div>
+                    <div className="mono txt-2" style={{ fontSize: 11 }}>ID: {user?.id?.slice(0, 8).toUpperCase() ?? 'UNKNOWN'}</div>
+                  </div>
+                  <Button variant="ghost" size="sm"><Icon name="edit" size={13} /> Edit Profile</Button>
+                </div>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {[['Display Name', user?.handle ?? 'Operator'], ['Email Address', user?.email ?? 'operator@shadownode.ai']].map(([l, v]) => (
-                <div key={l}>
-                  <label className="mono txt-2" style={{ fontSize: 9, display: 'block', marginBottom: 6 }}>{l.toUpperCase()}</label>
-                  <input className="field" defaultValue={v} />
-                </div>
-              ))}
-              <Button variant="ghost" size="sm" style={{ alignSelf: 'flex-start' }}>
-                <Icon name="save" size={13} aria-hidden /> Save Changes
-              </Button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div>
+                <label className="mono txt-2" style={{ fontSize: 9, display: 'block', marginBottom: 8 }}>PRIMARY_EMAIL</label>
+                <div className="field" style={{ opacity: 0.6 }}>{user?.email ?? 'operator@shadownode.ai'}</div>
+              </div>
+              <div>
+                <label className="mono txt-2" style={{ fontSize: 9, display: 'block', marginBottom: 8 }}>ACCESS_ROLE</label>
+                <div className="field" style={{ opacity: 0.6 }}>{user?.role?.toUpperCase() ?? 'USER'}</div>
+              </div>
             </div>
           </GlassCard>
 
-          {/* Security section */}
-          <GlassCard style={{ padding: '24px 26px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 18 }}>SECURITY</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[{ label: 'Change Password', icon: 'lock' }, { label: 'Two-Factor Authentication', icon: 'shield' }, { label: 'Active Sessions', icon: 'devices' }].map(item => (
-                <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                    <Icon name={item.icon} size={16} color="var(--txt3)" aria-hidden />
-                    <span style={{ fontSize: 13.5 }}>{item.label}</span>
-                  </div>
-                  <Button variant="ghost" size="sm">Manage</Button>
-                </div>
-              ))}
+          {/* Billing History */}
+          <GlassCard style={{ padding: '24px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>BILLING_HISTORY</div>
+            <div style={{ width: '100%', overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
+                    <th className="mono txt-2" style={{ fontSize: 9, padding: '12px 8px' }}>DATE</th>
+                    <th className="mono txt-2" style={{ fontSize: 9, padding: '12px 8px' }}>INVOICE</th>
+                    <th className="mono txt-2" style={{ fontSize: 9, padding: '12px 8px' }}>AMOUNT</th>
+                    <th className="mono txt-2" style={{ fontSize: 9, padding: '12px 8px' }}>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { d: 'May 12, 2025', i: 'INV-2025-001', a: '$29.00', s: 'PAID' },
+                    { d: 'Apr 12, 2025', i: 'INV-2025-002', a: '$29.00', s: 'PAID' },
+                    { d: 'Mar 12, 2025', i: 'INV-2025-003', a: '$29.00', s: 'PAID' },
+                  ].map((row, i) => (
+                    <tr key={i} style={{ borderBottom: '1px solid var(--border)', fontSize: 13 }}>
+                      <td style={{ padding: '12px 8px' }}>{row.d}</td>
+                      <td style={{ padding: '12px 8px' }} className="mono">{row.i}</td>
+                      <td style={{ padding: '12px 8px' }}>{row.a}</td>
+                      <td style={{ padding: '12px 8px' }}><Chip variant="green" size="sm">{row.s}</Chip></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </GlassCard>
         </div>
 
-        {/* Right Column: Subscription & Quota */}
+        {/* Right Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <SubscriptionCard />
           
-          {/* Subscription Section (Phase P3) */}
-          <SubscriptionSection />
-
-          <GlassCard variant="elevated" style={{ padding: '20px 22px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>USAGE QUOTAS</div>
+          <GlassCard style={{ padding: '24px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 20 }}>RESOURCE_QUOTA</div>
             {[
-              { label: 'API Requests', used: 8947, total: 10000, color: 'var(--cyan)' },
-              { label: 'Token Budget', used: 89400, total: 100000, color: '#a78bfa' },
-              { label: 'Active Nodes', used: 4, total: 6, color: 'var(--green)' },
-              { label: 'Personas', used: 4, total: 10, color: 'var(--amber)' },
+              { l: 'GENERATIONS', u: 8947, t: 10000, c: 'var(--cyan)' },
+              { l: 'NODE_CONNECTIONS', u: 4, t: 6, c: 'var(--green)' },
+              { l: 'MEMORY_UNITS', u: 12, t: 15, c: '#a78bfa' },
+              { l: 'PERSONA_SLOTS', u: 3, t: 5, c: 'var(--amber)' },
             ].map(q => (
-              <div key={q.label} style={{ marginBottom: 18 }}>
+              <div key={q.l} style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13 }}>{q.label}</span>
-                  <span className="mono" style={{ fontSize: 10, color: q.color }}>{q.used.toLocaleString()} / {q.total.toLocaleString()}</span>
+                  <span className="mono txt-2" style={{ fontSize: 9 }}>{q.l}</span>
+                  <span className="mono" style={{ fontSize: 10, color: q.c }}>{q.u} / {q.t}</span>
                 </div>
-                <ProgressBar value={(q.used / q.total) * 100} color={q.color} />
+                <ProgressBar value={(q.u / q.t) * 100} color={q.c} height={4} />
               </div>
             ))}
+            <div style={{ marginTop: 24, padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: 8, border: '1px solid var(--border)' }}>
+              <div className="mono txt-2" style={{ fontSize: 9, marginBottom: 6 }}>QUOTA_RESET</div>
+              <div style={{ fontSize: 12 }}>Resets in 18 days (June 1)</div>
+            </div>
           </GlassCard>
+
+          <Button variant="ghost" style={{ color: 'var(--red)', borderColor: 'rgba(248,113,113,0.1)' }}>
+            <Icon name="logout" size={14} /> TERMINATE_SESSION
+          </Button>
         </div>
       </div>
     </div>

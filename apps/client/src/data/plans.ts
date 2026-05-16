@@ -12,7 +12,7 @@ export interface Plan {
 
 export const PLANS: Plan[] = [
   {
-    id: 'free',
+    id: 'FREE',
     name: 'Ghost',
     price: 0,
     period: 'forever',
@@ -29,7 +29,7 @@ export const PLANS: Plan[] = [
     chipVariant: 'default',
   },
   {
-    id: 'pro',
+    id: 'PRO',
     name: 'Phantom',
     price: 29,
     period: 'month',
@@ -47,7 +47,7 @@ export const PLANS: Plan[] = [
     chipVariant: 'cyan',
   },
   {
-    id: 'shadow',
+    id: 'ELITE',
     name: 'Wraith',
     price: 99,
     period: 'month',
