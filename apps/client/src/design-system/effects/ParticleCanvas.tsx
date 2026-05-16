@@ -20,6 +20,8 @@ interface Cell {
   particles: number[]
 }
 
+// IMPORTANT: Each color string is intentionally incomplete (no closing paren).
+// fillStyle concatenates: `${p.color}${p.opacity})` → e.g., `rgba(0,229,255,0.25)`
 const COLORS = ['rgba(0,229,255,', 'rgba(124,58,237,', 'rgba(52,211,153,']
 
 /**
@@ -40,8 +42,7 @@ export function ParticleCanvas({ density = 0.35 }: ParticleCanvasProps) {
       vx: (Math.random() - 0.5) * 0.25,
       vy: (Math.random() - 0.5) * 0.25,
       size: 1 + Math.random() * 1.5,
-      opacity: 0.08 + Math.random() * 0.35,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: `${COLORS[Math.floor(Math.random() * COLORS.length)]}${(0.08 + Math.random() * 0.35).toFixed(2)})`,
     }))
   }, [density])
 
@@ -80,6 +81,7 @@ export function ParticleCanvas({ density = 0.35 }: ParticleCanvasProps) {
     }
 
     function draw() {
+      if (!ctx) return
       // Single guard — ctx is verified above and stable for the lifetime of this closure
       ctx.clearRect(0, 0, width, height)
 
@@ -95,7 +97,7 @@ export function ParticleCanvas({ density = 0.35 }: ParticleCanvasProps) {
       particles.forEach(p => {
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `${p.color}${p.opacity})`
+        ctx.fillStyle = p.color
         ctx.fill()
       })
 

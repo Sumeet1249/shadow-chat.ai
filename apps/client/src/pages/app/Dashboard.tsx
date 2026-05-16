@@ -1,202 +1,188 @@
-import { Link } from 'react-router-dom'
-import { GlassCard, Icon, Chip, ProgressBar, PulseDot } from '@/design-system/primitives'
-import { useCountUp } from '@/hooks/useCountUp'
-import { usePersonaStore } from '@/store/usePersonaStore'
-import { useAuthStore } from '@/store/useAuthStore'
-import { MOCK_OUTPUTS, PLATFORM_COLORS } from '@/data/mock/outputs'
-import { MOCK_PERSONAS } from '@/data/mock/personas'
-import { MOCK_NODES } from '@/data/mock/nodes'
+import { useNavigate } from 'react-router-dom'
+import { GlassCard, Icon, Chip } from '@/design-system/primitives'
 
-const QUICK_LAUNCH = [
-  { to: '/generate',   icon: 'auto_awesome', label: 'New Reply',   color: 'var(--cyan)' },
-  { to: '/workflow',   icon: 'terminal',     label: 'Terminal',    color: '#a78bfa' },
-  { to: '/arena',      icon: 'emoji_events', label: 'Arena',       color: 'var(--amber)' },
-  { to: '/analytics',  icon: 'analytics',    label: 'Analytics',   color: 'var(--green)' },
+const STATS = [
+  { label: 'TOTAL REPLIES', value: '2,847', trend: '+12.4%', icon: 'forum', color: 'var(--cyan)' },
+  { label: 'TOKENS USED', value: '89,420', trend: '+8.1%', icon: 'memory', color: '#a78bfa' },
+  { label: 'WIN RATE', value: '91%', trend: '+3.2%', icon: 'emoji_events', color: 'var(--amber)' },
+  { label: 'ACTIVE NODES', value: '4/8', trend: 'STABLE', icon: 'settings_input_antenna', color: 'var(--green)' },
 ]
 
-// Sparkline data — 12H activity bars (prototype values)
-const SPARKLINE_BARS = [38, 62, 44, 78, 58, 88, 72, 94, 68, 86, 90, 83]
-const SPARK_MAX = Math.max(...SPARKLINE_BARS)
-
-/** StatCard — count-up animated metric tile */
-function StatCard({ label, target, suffix = '', color = 'var(--cyan)', icon }: {
-  label: string; target: number; suffix?: string; color?: string; icon: string
-}) {
-  const value = useCountUp(target, 1400)
-  return (
-    <GlassCard style={{ padding: '20px 22px' } as React.CSSProperties}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-        <span className="mono txt-2" style={{ fontSize: 10 }}>{label}</span>
-        <Icon name={icon} size={16} color={color} aria-hidden />
-      </div>
-      <div style={{ fontFamily: 'var(--ff-disp)', fontWeight: 800, fontSize: 28, color }}>{value.toLocaleString()}{suffix}</div>
-    </GlassCard>
-  )
-}
+const OUTPUTS = [
+  { 
+    platform: 'TWITTER', 
+    persona: 'Nexus Architect', 
+    text: '"The infrastructure problem isn\'t compute — it\'s latency at the edge. We\'re solving the wrong bottleneck entirely..."', 
+    meta: '+84 engagements', 
+    tag: 'VIRAL', 
+    tagColor: 'var(--amber)',
+    time: '2m ago'
+  },
+  { 
+    platform: 'LINKEDIN', 
+    persona: 'Corporate Phantom', 
+    text: '"After 3 years in ML infrastructure, the one pattern separating top-tier teams from the rest is deceptively simple..."', 
+    meta: '+234 reactions', 
+    tag: 'HIGH', 
+    tagColor: 'var(--cyan)',
+    time: '18m ago'
+  },
+  { 
+    platform: 'REDDIT', 
+    persona: 'Ghost Analyst', 
+    text: '"This take fundamentally misses the reward model problem with current RLHF approaches. Here\'s a better framing..."', 
+    meta: '+1.2K upvotes', 
+    tag: 'TOP', 
+    tagColor: 'var(--amber)',
+    time: '1h ago'
+  },
+]
 
 export default function Dashboard() {
-  const { user } = useAuthStore()
-  const { activePersonaId } = usePersonaStore()
-  const activePersona = MOCK_PERSONAS.find(p => p.id === activePersonaId) ?? MOCK_PERSONAS[0]
-  const activeNodes = MOCK_NODES.filter(n => n.status === 'active')
-
+  const navigate = useNavigate()
   return (
     <div className="enter">
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 26 }}>
-        <div>
-          <Chip variant="green" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>
-            <PulseDot color="green" size={5} />
-            LIVE
-          </Chip>
-          <h1 className="h-md">Welcome back, <span className="grad-c">{user?.handle ?? 'Operator'}</span></h1>
-          <p className="txt-2" style={{ fontSize: 13.5, marginTop: 4 }}>Neural network nominal. {activeNodes.length} nodes operational.</p>
+      {/* Header Area */}
+      <div style={{ marginBottom: 32 }}>
+        <div className="mono txt-3" style={{ fontSize: 10, marginBottom: 8, letterSpacing: '0.1em' }}>Sunday, May 17, 2026</div>
+        <h1 className="h-lg" style={{ fontSize: 48, marginBottom: 8 }}>
+          Good morning, <span className="grad-c">Caleb</span>
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span className="txt-2" style={{ fontSize: 14 }}>Neural core stable • 4 nodes active • </span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--green)' }}>all systems nominal</span>
         </div>
-        <Link to="/generate" className="btn-p btn-sm">
-          <Icon name="auto_awesome" size={13} aria-hidden />
-          New Reply
-        </Link>
       </div>
 
-      {/* Stat cards — exact prototype set: TOTAL REPLIES / TOKENS USED / WIN RATE / ACTIVE NODES */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 22 }}>
-        <StatCard label="TOTAL REPLIES"  target={2847}              icon="chat_bubble"  color="var(--cyan)"   />
-        <StatCard label="TOKENS USED"    target={89420}             icon="memory"        color="#a78bfa"       />
-        <StatCard label="WIN RATE"       target={91}   suffix="%"   icon="emoji_events"  color="var(--amber)"  />
-        <StatCard label="ACTIVE NODES"   target={activeNodes.length} icon="hub"          color="var(--green)"  />
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 18 }}>
-        {/* Left column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-          {/* Sparkline — ACTIVITY 12H (prototype widget) */}
-          <GlassCard style={{ padding: '20px 22px' } as React.CSSProperties}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span className="mono txt-2" style={{ fontSize: 10 }}>ACTIVITY — 12H</span>
-              <Chip variant="green" style={{ display: 'inline-flex', gap: 4 } as React.CSSProperties}>
-                <PulseDot color="green" size={4} />
-                LIVE
-              </Chip>
-            </div>
-            {/* 12 bars */}
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 48 }}>
-              {SPARKLINE_BARS.map((v, i) => (
-                <div
-                  key={i}
-                  style={{
-                    flex: 1,
-                    height: `${(v / SPARK_MAX) * 100}%`,
-                    background: 'linear-gradient(to top, var(--cyan), #7c3aed)',
-                    borderRadius: '2px 2px 0 0',
-                    opacity: 0.7 + (v / SPARK_MAX) * 0.3,
-                    transition: 'height 0.6s ease',
-                  }}
-                  aria-hidden
-                />
-              ))}
-            </div>
-          </GlassCard>
-
-          {/* Quick Launch */}
-          <GlassCard style={{ padding: '20px 22px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 14 }}>QUICK LAUNCH</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-              {QUICK_LAUNCH.map(q => (
-                <Link key={q.to} to={q.to} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '16px 12px', borderRadius: 'var(--r-lg)', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)', textDecoration: 'none', transition: 'all var(--t-mid)' }}
-                  className="hover-glow">
-                  <div className="icon-box" style={{ width: 42, height: 42, background: `${q.color}12`, border: `1px solid ${q.color}22` }}>
-                    <Icon name={q.icon} size={18} color={q.color} aria-hidden />
-                  </div>
-                  <span className="mono" style={{ fontSize: 10, color: 'var(--txt2)', letterSpacing: '0.06em' }}>{q.label}</span>
-                </Link>
-              ))}
-            </div>
-          </GlassCard>
-
-          {/* Recent outputs */}
-          <GlassCard style={{ padding: '20px 22px' } as React.CSSProperties}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
-              <span className="mono txt-2" style={{ fontSize: 10 }}>RECENT OUTPUTS</span>
-              <Link to="/archive" className="mono txt-c" style={{ fontSize: 10 }}>View archive →</Link>
-            </div>
-            {MOCK_OUTPUTS.slice(0, 4).map((o, i) => (
-              <div key={i} style={{ padding: '12px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <span style={{ fontFamily: 'var(--ff-mono)', fontSize: 9, color: PLATFORM_COLORS[o.platform], background: `${PLATFORM_COLORS[o.platform]}18`, border: `1px solid ${PLATFORM_COLORS[o.platform]}2e`, padding: '2px 8px', borderRadius: 999 }}>
-                      {o.platform.toUpperCase()}
-                    </span>
-                    <span className="chip chip-v" style={{ fontSize: 9 }}>{o.persona}</span>
-                  </div>
-                  <span className="mono" style={{ fontSize: 9, color: 'var(--green)' }}>{o.eng}</span>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24 }}>
+        {/* Main Feed */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          
+          {/* Stats Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+            {STATS.map((s, i) => (
+              <GlassCard key={i} style={{ padding: '20px' } as React.CSSProperties}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                  <span className="mono txt-3" style={{ fontSize: 9, letterSpacing: '0.1em' }}>{s.label}</span>
+                  <Icon name={s.icon} size={14} color="var(--txt3)" />
                 </div>
-                <p style={{ fontSize: 12.5, color: 'var(--txt2)', lineHeight: 1.5 }}>"{o.text}"</p>
-              </div>
+                <div style={{ fontSize: 32, fontWeight: 800, marginBottom: 10, fontFamily: 'var(--ff-disp)' }}>{s.value}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 11, color: s.trend === 'STABLE' ? 'var(--green)' : s.color, fontWeight: 800 }}>{s.trend}</span>
+                  <span className="mono txt-3" style={{ fontSize: 9 }}>vs last week</span>
+                </div>
+              </GlassCard>
             ))}
-          </GlassCard>
+          </div>
+
+          {/* Recent Output Feed */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h2 className="h-sm" style={{ fontSize: 18 }}>Recent Output</h2>
+              <button 
+                onClick={() => navigate('/archive')}
+                className="mono" 
+                style={{ fontSize: 10, color: 'var(--txt3)', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer' }}
+              >
+                View Archive â†’
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {OUTPUTS.map((o, i) => (
+                <GlassCard key={i} style={{ padding: '20px', background: 'rgba(10, 18, 38, 0.4)' } as React.CSSProperties}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <Chip variant="cyan" size="sm" style={{ fontSize: 9 }}>{o.platform}</Chip>
+                      <Chip variant="violet" size="sm" style={{ fontSize: 9 }}>{o.persona}</Chip>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span className="mono" style={{ fontSize: 10, color: o.tagColor, fontWeight: 800, letterSpacing: '0.05em' }}>{o.tag}</span>
+                      <span className="mono txt-3" style={{ fontSize: 10 }}>{o.time}</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--txt2)', fontStyle: 'italic', marginBottom: 16 }}>
+                    {o.text}
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="mono" style={{ fontSize: 11, color: 'var(--green)', fontWeight: 700 }}>{o.meta}</span>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button className="btn-g" style={{ padding: 6, borderRadius: 8 }}><Icon name="content_copy" size={14} /></button>
+                      <button className="btn-g" style={{ padding: 6, borderRadius: 8 }}><Icon name="refresh" size={14} /></button>
+                    </div>
+                  </div>
+                </GlassCard>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Right column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Active persona */}
-          <GlassCard variant="elevated" style={{ padding: '18px 20px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 12 }}>ACTIVE PERSONA</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <div style={{ width: 44, height: 44, borderRadius: '50%', background: `linear-gradient(135deg,${activePersona.gradient})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 800, color: '#fff' }}>
-                {activePersona.name.charAt(0)}
-              </div>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{activePersona.name}</div>
-                <span className="chip chip-v" style={{ fontSize: 9 }}>{activePersona.tone}</span>
-              </div>
+        {/* Sidebar Widgets */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {/* Activity Viz */}
+          <GlassCard style={{ padding: '20px' } as React.CSSProperties}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <span className="mono txt-3" style={{ fontSize: 10, letterSpacing: '0.1em' }}>ACTIVITY â€” 12H</span>
+              <Chip variant="green" size="sm" style={{ fontSize: 8 }}>LIVE</Chip>
             </div>
-            {[['Replies', activePersona.replies.toLocaleString()], ['Win Rate', `${activePersona.wins}%`], ['Avg Eng.', activePersona.avgEng]].map(([l, v]) => (
-              <div key={l} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                <span className="mono txt-2" style={{ fontSize: 10 }}>{l}</span>
-                <span className="mono txt-c" style={{ fontSize: 10 }}>{v}</span>
-              </div>
-            ))}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 60 }}>
+              {[0.4, 0.6, 0.3, 0.8, 0.5, 0.9, 0.7, 1.0, 0.6, 0.4, 0.8, 0.5].map((h, i) => (
+                <div key={i} style={{ 
+                  flex: 1, 
+                  height: `${h * 100}%`, 
+                  background: 'linear-gradient(to top, #7c3aed, #00e5ff)',
+                  borderRadius: '2px 2px 0 0',
+                  opacity: 0.8
+                }} />
+              ))}
+            </div>
           </GlassCard>
 
-          {/* Node status */}
-          <GlassCard style={{ padding: '18px 20px' } as React.CSSProperties}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-              <span className="mono txt-2" style={{ fontSize: 10 }}>NODE STATUS</span>
-              <Link to="/nodes" className="mono txt-c" style={{ fontSize: 10 }}>Manage →</Link>
+          {/* Node Grid Widget */}
+          <GlassCard style={{ padding: '20px' } as React.CSSProperties}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <span className="mono txt-3" style={{ fontSize: 10, letterSpacing: '0.1em' }}>NODE STATUS</span>
+              <button 
+                onClick={() => navigate('/nodes')}
+                className="mono" 
+                style={{ fontSize: 10, color: 'var(--txt3)', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Manage
+              </button>
             </div>
-            {MOCK_NODES.slice(0, 4).map(n => (
-              <div key={n.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: n.status === 'active' ? 'var(--green)' : n.status === 'error' ? 'var(--red)' : 'var(--txt3)', flexShrink: 0 }} aria-hidden />
-                <span className="mono" style={{ fontSize: 10, flex: 1 }}>{n.name}</span>
-                <ProgressBar value={n.health} color={n.health > 95 ? 'var(--green)' : 'var(--amber)'} height={3} />
-                <span className="mono txt-2" style={{ fontSize: 9, width: 30, textAlign: 'right' }}>{n.health}%</span>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {[
+                { name: 'NODE-ALPHA', platform: 'Twitter', req: '1284 req', health: 90 },
+                { name: 'NODE-BETA', platform: 'LinkedIn', req: '445 req', health: 87 },
+                { name: 'NODE-GAMMA', platform: 'Reddit', req: '0 req', health: 100 },
+                { name: 'NODE-DELTA', platform: 'Discord', req: '893 req', health: 84 },
+              ].map((n, i) => (
+                <div key={i}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: n.health > 90 ? 'var(--green)' : 'var(--amber)' }} />
+                      <span style={{ fontSize: 11, fontWeight: 700 }}>{n.name}</span>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: n.health === 100 ? 'var(--green)' : '#fff' }}>{n.health}%</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="mono txt-3" style={{ fontSize: 9 }}>{n.platform} â€¢ {n.req}</span>
+                    <div style={{ width: 60, height: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
+                      <div style={{ width: `${n.health}%`, height: '100%', background: n.health > 90 ? 'var(--green)' : 'var(--amber)' }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </GlassCard>
 
-          {/* Quota Usage widget (prototype — third right-column widget) */}
-          <GlassCard style={{ padding: '18px 20px' } as React.CSSProperties}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 14 }}>QUOTA USAGE</div>
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 12 }}>API Calls</span>
-                <span className="mono txt-c" style={{ fontSize: 10 }}>8,400 / 10,000</span>
-              </div>
-              <ProgressBar value={84} color="var(--cyan)" />
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 12 }}>Storage</span>
-                <span className="mono" style={{ fontSize: 10, color: '#a78bfa' }}>2.4 / 10 GB</span>
-              </div>
-              <ProgressBar value={24} color="#a78bfa" />
-            </div>
-            <Link to="/account" className="btn-g btn-sm" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px 12px', textDecoration: 'none' }}>
-              <Icon name="upgrade" size={13} aria-hidden />
-              <span style={{ fontSize: 12 }}>Upgrade Plan →</span>
-            </Link>
-          </GlassCard>
+          <button 
+            onClick={() => navigate('/generate')}
+            className="btn-p" 
+            style={{ width: '100%', padding: '14px', borderRadius: 12, justifyContent: 'center', gap: 10 }}
+          >
+            <Icon name="add" size={18} />
+            New Generation
+          </button>
         </div>
       </div>
     </div>

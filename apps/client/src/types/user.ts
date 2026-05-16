@@ -4,8 +4,7 @@ export interface User {
   handle: string
   email: string
   role: UserRole
-  /** Plan ID — matches Plan.id in src/data/plans.ts: 'free' | 'pro' | 'shadow' */
-  plan?: string
+  plan?: 'FREE' | 'PRO' | 'ELITE'
 }
 
 export interface LoginPayload {

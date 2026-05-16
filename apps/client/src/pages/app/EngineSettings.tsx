@@ -1,7 +1,6 @@
-// EngineSettings — Phase 7.5 stub
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useUIStore, Theme } from '@/store/useUIStore'
 import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
-import { ToggleLeft, ToggleRight } from 'lucide-react'
 
 const MODELS = [
   { id: 'gpt4o',   name: 'GPT-4o',            provider: 'OpenAI',    cost: '$0.005/1K' },
@@ -10,6 +9,7 @@ const MODELS = [
 ]
 
 export default function EngineSettings() {
+  const { theme, setTheme } = useUIStore()
   const [model, setModel] = useState('gpt4o')
   const [temp, setTemp] = useState(72)
   const [topP, setTopP] = useState(90)
@@ -57,7 +57,7 @@ export default function EngineSettings() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
               <span style={{ fontSize: 13 }}>Streaming Output</span>
               <button onClick={() => setStreaming(s => !s)} aria-label={`${streaming ? 'Disable' : 'Enable'} streaming output`} style={{ background: 'none', border: 'none', cursor: 'pointer', color: streaming ? 'var(--cyan)' : 'var(--txt3)' }}>
-                {streaming ? <ToggleRight size={26} aria-hidden /> : <ToggleLeft size={26} aria-hidden />}
+                <Icon name={streaming ? 'toggle_on' : 'toggle_off'} size={26} color={streaming ? 'var(--cyan)' : 'var(--txt3)'} />
               </button>
             </div>
             <p className="txt-2" style={{ fontSize: 11 }}>Stream tokens as they are generated.</p>
@@ -65,6 +65,16 @@ export default function EngineSettings() {
           <div style={{ marginBottom: 18 }}>
             <div className="mono txt-2" style={{ fontSize: 9, marginBottom: 6 }}>MAX TOKENS</div>
             <input type="number" className="field" value={maxTokens} onChange={e => setMaxTokens(+e.target.value)} min={50} max={4096} aria-label="Maximum tokens" />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <div className="mono txt-2" style={{ fontSize: 9, marginBottom: 8 }}>THEME</div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['dark', 'sage', 'purple'] as Theme[]).map(t => (
+                <button key={t} onClick={() => setTheme(t)} style={{ flex: 1, padding: '6px', fontSize: 11, borderRadius: 'var(--r-sm)', border: `1px solid ${theme === t ? 'var(--cyan)' : 'var(--border)'}`, background: theme === t ? 'var(--cyan-glow)' : 'transparent', color: theme === t ? 'var(--cyan)' : 'var(--txt2)', cursor: 'pointer', textTransform: 'capitalize' }}>
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <Button variant="primary" style={{ flex: 1, justifyContent: 'center' }}><Icon name="save" size={13} aria-hidden /> Save</Button>

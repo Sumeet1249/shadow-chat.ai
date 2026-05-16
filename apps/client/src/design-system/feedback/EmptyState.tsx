@@ -1,7 +1,5 @@
 import { Icon } from '../primitives/Icon'
 import { Button } from '../primitives/Button'
-import type { ReactNode } from 'react'
-
 interface EmptyStateProps {
   icon?: string
   heading: string

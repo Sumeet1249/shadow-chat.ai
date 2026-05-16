@@ -1,59 +1,90 @@
 import { Link } from 'react-router-dom'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
+import { GlassCard, Icon, Chip, Button } from '@/design-system/primitives'
 import { Brain } from 'lucide-react'
 
-const LAYERS = [
-  { name: 'Generation Engine', desc: 'Multi-model neural inference with sub-200ms latency', items: ['Reply Generation', 'Batch Processing', 'Streaming Output', 'Multi-Platform Sync'], color: 'var(--cyan)', icon: 'auto_awesome' },
-  { name: 'Intelligence Layer', desc: 'Persistent memory, persona management, and context injection', items: ['Memory Matrix', 'Persona Engine', 'Marketplace', 'Context Injection'], color: '#a78bfa', icon: 'psychology' },
-  { name: 'Operations Hub', desc: 'Node orchestration, team management, and workflow automation', items: ['Node Command Center', 'Syndicate Ops', 'Workflow Terminal', 'Signal Feed'], color: 'var(--amber)', icon: 'hub' },
-  { name: 'Analytics Core', desc: 'ML-backed telemetry, engagement tracking, and AI insights', items: ['Neural Analytics', 'Global Telemetry', 'System Health', 'A/B Arena'], color: 'var(--green)', icon: 'analytics' },
+const FEATURES = [
+  { icon: 'auto_awesome', title: 'Neural Generation', desc: 'Context-aware reply generation using state-of-the-art LLMs (GPT-4o, Claude 3.5).', color: 'var(--cyan)' },
+  { icon: 'psychology', title: 'Persona Calibration', desc: 'Define unique AI voices with isolated memory, tone, and behavioral logic.', color: '#a78bfa' },
+  { icon: 'hub', title: 'Node Cluster', desc: 'Distributed infrastructure to manage hundreds of accounts with unique IP signatures.', color: 'var(--amber)' },
+  { icon: 'memory', title: 'Memory Matrix', desc: 'Inject persistent context and domain knowledge into every neural response.', color: 'var(--green)' },
+  { icon: 'emoji_events', title: 'Arena Testing', desc: 'Battle personas head-to-head to find the highest-converting response patterns.', color: '#00e5ff' },
+  { icon: 'shield', title: 'Encrypted Vault', desc: 'Enterprise-grade security with AES-256 encryption for all credentials and keys.', color: '#f87171' },
 ]
 
 export default function Features() {
   return (
-    <div style={{ background: 'var(--void)', minHeight: '100vh' }} className="scan enter">
+    <div style={{ background: 'var(--void)', minHeight: '100vh', position: 'relative' }}>
+      <ScanlineOverlay />
       <ParticleCanvas density={0.3} />
-      <nav className="lnav" aria-label="Public navigation">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 7, background: 'linear-gradient(135deg,#00e5ff,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Brain size={15} color="#fff" aria-hidden /></div>
-          <span style={{ fontFamily: 'var(--ff-disp)', fontWeight: 800, fontSize: 16 }}>SHADOW NODE</span>
-        </div>
-        <div style={{ display: 'flex', gap: 10 }}>
+      
+      {/* Nav */}
+      <nav className="lnav" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <div style={{ width: 28, height: 28, borderRadius: 6, background: 'linear-gradient(135deg,#00e5ff,#7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Brain size={14} color="#fff" />
+          </div>
+          <span style={{ fontFamily: 'var(--ff-disp)', fontWeight: 800, fontSize: 14, color: '#fff' }}>SHADOW NODE</span>
+        </Link>
+        <div style={{ display: 'flex', gap: 20 }}>
+          <Link to="/pricing" className="mono txt-2" style={{ fontSize: 10, textDecoration: 'none' }}>PRICING</Link>
           <Link to="/login" className="btn-g btn-sm">Login</Link>
-          <Link to="/register" className="btn-p btn-sm">Get Access →</Link>
         </div>
       </nav>
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '120px 60px 80px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <Chip variant="cyan" style={{ marginBottom: 14, display: 'inline-flex' } as React.CSSProperties}>ARCHITECTURE</Chip>
-          <h1 className="h-lg">System <span className="grad-c">Architecture</span></h1>
-          <p className="txt-2" style={{ fontSize: 15, marginTop: 12, maxWidth: 520, margin: '12px auto 0', lineHeight: 1.7 }}>Four interconnected layers powering the most advanced AI reply platform.</p>
-        </div>
+      <main style={{ position: 'relative', zIndex: 1, paddingTop: 140, paddingBottom: 100 }}>
+        {/* Hero Section */}
+        <section style={{ textAlign: 'center', marginBottom: 80, padding: '0 20px' }}>
+          <Chip variant="violet" style={{ marginBottom: 16, display: 'inline-flex' } as React.CSSProperties}>CAPABILITIES</Chip>
+          <h1 className="h-xl" style={{ marginBottom: 16 }}>The Core <span className="grad-v">Architecture</span></h1>
+          <p className="txt-2" style={{ fontSize: 17, maxWidth: 600, margin: '0 auto', lineHeight: 1.65 }}>
+            A unified neural command center built for the distributed agentic web.
+          </p>
+        </section>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {LAYERS.map((l, i) => (
-            <GlassCard key={i} className="hover-glow" style={{ padding: '28px 32px', transition: 'all var(--t-mid)' } as React.CSSProperties}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20 }}>
-                <div className="icon-box" style={{ width: 56, height: 56, background: `${l.color}14`, border: `1px solid ${l.color}30`, flexShrink: 0 }}>
-                  <Icon name={l.icon} size={24} color={l.color} aria-hidden />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h2 style={{ fontFamily: 'var(--ff-disp)', fontWeight: 700, fontSize: 20, marginBottom: 4 }}>{l.name}</h2>
-                  <p className="txt-2" style={{ fontSize: 13, marginBottom: 14 }}>{l.desc}</p>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {l.items.map((item, j) => (
-                      <span key={j} className="chip" style={{ background: `${l.color}0a`, color: l.color, border: `1px solid ${l.color}25`, padding: '6px 14px' }}>{item}</span>
-                    ))}
-                  </div>
-                </div>
+        {/* Feature Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18, maxWidth: 1100, margin: '0 auto', padding: '0 40px' }}>
+          {FEATURES.map((f, i) => (
+            <GlassCard key={i} className="hover-glow" style={{ padding: '32px' } as React.CSSProperties}>
+              <div className="icon-box" style={{ width: 56, height: 56, background: `${f.color}15`, border: `1px solid ${f.color}30`, marginBottom: 20 }}>
+                <Icon name={f.icon} size={24} color={f.color} />
               </div>
-              {i < LAYERS.length - 1 && <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}><Icon name="arrow_downward" size={16} color="var(--txt3)" aria-hidden /></div>}
+              <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>{f.title}</h3>
+              <p className="txt-2" style={{ fontSize: 14, lineHeight: 1.6 }}>{f.desc}</p>
             </GlassCard>
           ))}
         </div>
-      </div>
+
+        {/* Tech Specs Section */}
+        <section style={{ maxWidth: 1100, margin: '80px auto 0', padding: '0 40px' }}>
+          <GlassCard variant="elevated" style={{ padding: '40px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 11, marginBottom: 32, letterSpacing: '0.12em' }}>TECHNICAL_SPECIFICATIONS v2.4</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 40 }}>
+              {[
+                { l: 'INFERENCE', v: '<200ms', d: 'Latency across 3 regions' },
+                { l: 'CAPACITY', v: '1M+', d: 'Tokens per persona / day' },
+                { l: 'UPTIME', v: '99.98%', d: 'Distributed node cluster' },
+                { l: 'SECURITY', v: 'AES-256', d: 'End-to-end key encryption' },
+              ].map(s => (
+                <div key={s.l}>
+                  <div style={{ fontFamily: 'var(--ff-disp)', fontWeight: 800, fontSize: 24, color: 'var(--cyan)', marginBottom: 4 }}>{s.v}</div>
+                  <div className="mono" style={{ fontSize: 10, marginBottom: 4 }}>{s.l}</div>
+                  <div className="txt-2" style={{ fontSize: 11 }}>{s.d}</div>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+        </section>
+
+        {/* CTA */}
+        <section style={{ textAlign: 'center', marginTop: 100 }}>
+          <h2 className="h-lg" style={{ marginBottom: 20 }}>Ready to deploy?</h2>
+          <Button variant="primary" style={{ padding: '14px 40px', fontSize: 15 }} onClick={() => window.location.href='/register'}>
+            Initialize Node Cluster →
+          </Button>
+        </section>
+      </main>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
+import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
 import { Button } from '@/design-system/primitives'
 
 /**
@@ -19,25 +20,58 @@ export default function NotFound() {
   }, [])
 
   return (
-    <div style={{ background: 'var(--void)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="scan enter">
+    <div style={{ background: 'var(--void)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="enter">
+      <ScanlineOverlay />
       <ParticleCanvas density={0.25} />
       <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <div
           style={{
+            position: 'relative',
             fontFamily: 'var(--ff-disp)',
             fontWeight: 800,
             fontSize: 'clamp(100px, 18vw, 200px)',
             lineHeight: 0.85,
+            userSelect: 'none',
+          }}
+          aria-label="404 Not Found"
+        >
+          {/* Main text */}
+          <div style={{
             background: 'linear-gradient(135deg,#00e5ff,#7c3aed)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
             filter: glitch ? 'blur(1px)' : 'none',
-            transition: 'filter 0.05s',
-          }}
-          aria-label="404 Not Found"
-        >
-          404
+          }}>
+            404
+          </div>
+          {/* Glitch layers */}
+          {glitch && (
+            <>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: -2,
+                color: 'var(--red)',
+                opacity: 0.5,
+                zIndex: -1,
+                mixBlendMode: 'screen',
+              }}>
+                404
+              </div>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 2,
+                color: 'var(--cyan)',
+                opacity: 0.5,
+                zIndex: -1,
+                mixBlendMode: 'screen',
+              }}>
+                404
+              </div>
+            </>
+          )}
         </div>
         <div className="mono txt-2" style={{ fontSize: 13, marginBottom: 8, letterSpacing: '0.1em' }}>// NODE_NOT_FOUND</div>
         <p style={{ color: 'var(--txt2)', fontSize: 15, maxWidth: 400, margin: '0 auto 32px', lineHeight: 1.7 }}>

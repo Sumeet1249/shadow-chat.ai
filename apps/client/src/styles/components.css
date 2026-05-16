@@ -24,6 +24,16 @@
     box-shadow: 0 0 48px rgba(0, 229, 255, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
+  .hover-glow {
+    transition: all var(--t-mid);
+  }
+  .hover-glow:hover {
+    border-color: var(--border2) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    box-shadow: 0 0 24px rgba(0, 229, 255, 0.06);
+    transform: translateY(-1px);
+  }
+
   /* ── BUTTONS ── */
   .btn-p {
     display: inline-flex;
@@ -87,9 +97,33 @@
   }
   .btn-a:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  .btn-c {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 26px;
+    background: var(--cyan);
+    color: var(--void);
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--r-pill);
+    transition: all var(--t-mid);
+  }
+  .btn-c:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 229, 255, 0.32);
+  }
+  .btn-c:disabled { opacity: 0.5; cursor: not-allowed; }
+
   .btn-sm {
     padding: 6px 14px !important;
     font-size: 12px !important;
+  }
+
+  .chip-sm {
+    font-size: 9px !important;
+    padding: 2px 8px !important;
   }
 
   /* ── CHIPS ── */
@@ -189,54 +223,58 @@
     box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08), 0 0 18px rgba(0, 229, 255, 0.08);
   }
 
-  /* ── LAYOUT ── */
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: var(--sw);
-    background: rgba(4, 8, 16, 0.96);
-    border-right: 1px solid var(--border);
-    backdrop-filter: blur(40px);
-    display: flex;
-    flex-direction: column;
-    z-index: 200;
-  }
-  .topbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: var(--sw);
-    height: 58px;
-    background: rgba(4, 8, 16, 0.87);
-    backdrop-filter: blur(22px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
-    z-index: 190;
-  }
-  .statusbar {
-    position: fixed;
-    bottom: 0;
-    left: var(--sw);
-    right: 0;
-    height: 30px;
-    background: rgba(4, 8, 16, 0.96);
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 22px;
-    gap: 22px;
-    z-index: 190;
-  }
-  .main {
-    margin-left: var(--sw);
-    min-height: 100vh;
-    padding: 76px 32px 50px;
-  }
+}
+
+/* ── LAYOUT (Moved out of layer to ensure priority) ── */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: var(--sw);
+  background: rgba(4, 8, 16, 0.96);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(40px);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+}
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sw);
+  height: 58px;
+  background: rgba(4, 8, 16, 0.87);
+  backdrop-filter: blur(22px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 190;
+}
+.statusbar {
+  position: fixed;
+  bottom: 0;
+  left: var(--sw);
+  right: 0;
+  height: 30px;
+  background: rgba(4, 8, 16, 0.96);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  gap: 22px;
+  z-index: 190;
+}
+.main {
+  margin-left: var(--sw) !important;
+  min-height: 100vh;
+  padding: 76px 32px 50px;
+}
+
+@layer components {
 
   /* ── SIDEBAR LINKS ── */
   .slink {
@@ -282,6 +320,7 @@
     border-radius: 50%;
     filter: blur(62px);
     pointer-events: none;
+    will-change: transform, filter;
   }
 
   /* ── SCANLINE ── */

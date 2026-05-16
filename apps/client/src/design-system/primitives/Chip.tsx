@@ -30,7 +30,7 @@ export function Chip({ variant = 'default', size, children, className, style }: 
       className={cn(
         'chip',
         variantMap[variant],
-        size === 'sm' && 'text-[9px] px-[8px] py-[2px]',
+        size === 'sm' && 'chip-sm',
         className
       )}
       style={style}

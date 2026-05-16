@@ -6,7 +6,14 @@ import { Icon } from '@/design-system/primitives'
 
 import { NAV } from '@/data/nav'
 
-const COMMANDS = NAV.flatMap(group =>
+interface Command {
+  label: string
+  icon: string
+  path: string
+  cat: string
+}
+
+const COMMANDS: Command[] = NAV.flatMap(group =>
   group.items.map(item => ({
     label: item.label,
     icon: item.icon,

@@ -6,7 +6,8 @@ import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { StatusBar } from './StatusBar'
 import { CommandPalette } from './CommandPalette'
-import { ErrorBoundary } from '@/design-system/feedback/EmptyState'
+import { ErrorBoundary } from '@/design-system/feedback/ErrorBoundary'
+import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
 
 /**
  * AppShell — Persistent authenticated layout.
@@ -17,7 +18,8 @@ export function AppShell() {
   const location = useLocation()
 
   return (
-    <div className="bg-void min-h-screen scan">
+    <div className="bg-void min-h-screen">
+      <ScanlineOverlay />
       {/* Skip to content — a11y */}
       <a
         href="#main-content"
