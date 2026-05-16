@@ -31,19 +31,19 @@ export function Sidebar({ cur, nav }: { cur: string, nav: (path: string) => void
     <aside className="sidebar">
       {/* Logo */}
       <div style={{ padding: "22px 18px 18px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#00e5ff,#7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(0,229,255,.28)" }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#059669,#10b981)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 20px rgba(5,150,105,.18)" }}>
           <I n="psychology" s={17} c="#fff" />
         </div>
         <div>
-          <div style={{ fontFamily: "var(--ff-disp)", fontWeight: 800, fontSize: 15, letterSpacing: "-.02em" }}>SHADOW NODE</div>
-          <div className="mono" style={{ color: "var(--cyan)", opacity: .65, fontSize: 10 }}>v2.4.1 · NEURAL</div>
+          <div style={{ fontFamily: "var(--ff-disp)", fontWeight: 800, fontSize: 15, letterSpacing: "-.02em", color: "var(--txt)" }}>SHADOW CHATS</div>
+          <div className="mono" style={{ color: "var(--cyan)", opacity: .75, fontSize: 10 }}>v2.4.1 · NEURAL</div>
         </div>
       </div>
       {/* User */}
       <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 30, height: 30, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#00e5ff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", boxShadow: "0 0 10px rgba(0,229,255,.18)", flexShrink: 0 }}>C</div>
+        <div style={{ width: 30, height: 30, borderRadius: "50%", background: "linear-gradient(135deg,#059669,#10b981)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", boxShadow: "0 0 10px rgba(5,150,105,.15)", flexShrink: 0 }}>C</div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Caleb_Shadow</div>
+          <div style={{ fontWeight: 600, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "var(--txt)" }}>Caleb_Shadow</div>
           <div className="mono txt-a" style={{ fontSize: 10 }}>ELITE TIER</div>
         </div>
         <div className="dot" />
