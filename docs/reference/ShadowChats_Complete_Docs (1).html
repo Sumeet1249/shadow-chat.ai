@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Chats — Complete Documentation Suite</title>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #131316;
+    --bg3: #1a1a1f;
+    --bg4: #222228;
+    --border: #2a2a32;
+    --border2: #363644;
+    --text: #e8e6f0;
+    --text2: #a09ab8;
+    --text3: #6b6580;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent3: #c084fc;
+    --teal: #06b6d4;
+    --teal2: #22d3ee;
+    --amber: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --pink: #ec4899;
+    --blue: #3b82f6;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+  
+  /* NAV */
+  nav { position: sticky; top: 0; background: rgba(13,13,15,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 0 24px; display: flex; align-items: center; gap: 4px; overflow-x: auto; }
+  .nav-brand { font-size: 15px; font-weight: 700; color: var(--accent3); padding: 14px 16px 14px 0; border-right: 1px solid var(--border); margin-right: 8px; white-space: nowrap; }
+  .nav-brand span { color: var(--text3); font-weight: 400; font-size: 12px; display: block; }
+  nav a { color: var(--text2); text-decoration: none; padding: 14px 12px; font-size: 12px; font-weight: 500; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  nav a:hover, nav a.active { color: var(--accent3); border-bottom-color: var(--accent); }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #0d0d0f 0%, #130d1f 50%, #0d0d0f 100%); padding: 72px 0 56px; border-bottom: 1px solid var(--border); }
+  .hero-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); border-radius: 100px; padding: 4px 12px; font-size: 11px; color: var(--accent3); margin-bottom: 20px; }
+  .hero h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 12px; }
+  .hero h1 span { background: linear-gradient(90deg, var(--accent2), var(--teal2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { color: var(--text2); font-size: 16px; max-width: 620px; margin-bottom: 28px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 20px; }
+  .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text3); }
+  .hero-meta-item strong { color: var(--text2); }
+  .doc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 32px; }
+  .doc-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+  .doc-card:hover { border-color: var(--accent); background: var(--bg4); }
+  .doc-card .icon { font-size: 20px; margin-bottom: 8px; }
+  .doc-card h4 { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .doc-card p { font-size: 11px; color: var(--text3); }
+
+  /* SECTION HEADINGS */
+  .section-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent3); background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 4px; padding: 3px 8px; margin-bottom: 12px; }
+  .section-title { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .section-desc { color: var(--text2); font-size: 14px; margin-bottom: 32px; max-width: 700px; }
+
+  /* CARDS & TABLES */
+  .card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+  .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .card p { color: var(--text2); font-size: 13px; line-height: 1.7; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 7px; margin: 2px; }
+  .tag-purple { background: rgba(124,58,237,0.15); color: var(--accent3); border: 1px solid rgba(124,58,237,0.25); }
+  .tag-teal { background: rgba(6,182,212,0.12); color: var(--teal2); border: 1px solid rgba(6,182,212,0.2); }
+  .tag-amber { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+  .tag-green { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+  .tag-red { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .tag-blue { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+  .tag-pink { background: rgba(236,72,153,0.12); color: #f472b6; border: 1px solid rgba(236,72,153,0.2); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--bg4); color: var(--text2); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border2); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; overflow-x: auto; }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-diagram { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; overflow-x: auto; }
+  .arch-layer { margin-bottom: 20px; }
+  .arch-layer-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; padding-left: 4px; }
+  .arch-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .arch-box { flex: 1; min-width: 120px; border-radius: var(--radius); padding: 12px 14px; border: 1px solid; }
+  .arch-box h5 { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+  .arch-box p { font-size: 11px; opacity: 0.7; }
+  .arch-box.purple { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: var(--accent3); }
+  .arch-box.teal { background: rgba(6,182,212,0.1); border-color: rgba(6,182,212,0.25); color: var(--teal2); }
+  .arch-box.amber { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.25); color: #fbbf24; }
+  .arch-box.green { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); color: #34d399; }
+  .arch-box.red { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.2); color: #f87171; }
+  .arch-box.blue { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.25); color: #60a5fa; }
+  .arch-box.gray { background: rgba(255,255,255,0.04); border-color: var(--border2); color: var(--text2); }
+  .arch-arrow { text-align: center; color: var(--text3); font-size: 18px; padding: 4px 0; }
+
+  /* WIREFRAMES */
+  .wireframe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .phone-frame { background: var(--bg4); border: 2px solid var(--border2); border-radius: 28px; padding: 16px 10px; position: relative; }
+  .phone-notch { width: 60px; height: 8px; background: var(--border2); border-radius: 4px; margin: 0 auto 12px; }
+  .phone-screen { background: var(--bg); border-radius: 16px; min-height: 360px; overflow: hidden; }
+  .phone-label { text-align: center; font-size: 11px; color: var(--text3); margin-top: 10px; font-weight: 500; }
+
+  /* SCREEN ELEMENTS */
+  .sc-header { background: var(--bg3); padding: 12px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+  .sc-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--teal)); flex-shrink: 0; }
+  .sc-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .sc-status { font-size: 10px; color: var(--green); }
+  .sc-body { padding: 10px 12px; }
+  .sc-bubble { border-radius: 14px; padding: 8px 10px; font-size: 10px; line-height: 1.4; max-width: 75%; margin-bottom: 6px; }
+  .sc-bubble.them { background: var(--bg3); color: var(--text2); border-bottom-left-radius: 4px; }
+  .sc-bubble.me { background: linear-gradient(135deg, var(--accent), #5b21b6); color: white; border-bottom-right-radius: 4px; margin-left: auto; }
+  .sc-magic { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); border-radius: var(--radius); margin: 8px 0; padding: 10px 12px; }
+  .sc-magic-label { font-size: 9px; font-weight: 700; color: var(--accent3); letter-spacing: 0.5px; margin-bottom: 6px; }
+  .sc-reply-opt { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 6px 8px; font-size: 9px; color: var(--text2); margin-bottom: 4px; cursor: pointer; transition: all 0.15s; }
+  .sc-reply-opt:hover { border-color: var(--accent); color: var(--text); }
+  .sc-tone-bar { display: flex; gap: 4px; margin-bottom: 6px; }
+  .sc-tone { font-size: 8px; padding: 3px 6px; border-radius: 4px; cursor: pointer; }
+  .sc-tone.active { background: var(--accent); color: white; }
+  .sc-tone:not(.active) { background: var(--bg4); color: var(--text3); }
+  .sc-input-row { display: flex; gap: 6px; align-items: center; padding: 8px 10px; border-top: 1px solid var(--border); }
+  .sc-input { background: var(--bg3); border: 1px solid var(--border2); border-radius: 16px; padding: 6px 10px; font-size: 10px; color: var(--text2); flex: 1; }
+  .sc-send { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; flex-shrink: 0; }
+  .sc-fab { position: absolute; bottom: 50px; right: 16px; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 13px; color: white; box-shadow: 0 4px 12px rgba(124,58,237,0.4); }
+
+  /* FLOW CHART */
+  .flow { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 16px; }
+  .flow-line { display: flex; flex-direction: column; align-items: center; }
+  .flow-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); margin-top: 4px; flex-shrink: 0; }
+  .flow-dot.teal { background: var(--teal); }
+  .flow-dot.amber { background: var(--amber); }
+  .flow-dot.green { background: var(--green); }
+  .flow-connector { width: 2px; background: var(--border2); flex: 1; min-height: 28px; }
+  .flow-content { padding-bottom: 24px; }
+  .flow-content h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .flow-content p { font-size: 12px; color: var(--text2); }
+
+  /* API TOGGLE SECTION */
+  .toggle-section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+  .toggle-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .toggle-title { font-size: 15px; font-weight: 600; }
+  .toggle-switch-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+  .toggle-switch { width: 44px; height: 24px; background: var(--border2); border-radius: 12px; position: relative; cursor: pointer; transition: background 0.2s; }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-knob { width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: left 0.2s; }
+  .toggle-switch.on .toggle-knob { left: 23px; }
+  .option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .opt-card { border: 2px solid var(--border); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+  .opt-card:hover, .opt-card.selected { border-color: var(--accent); background: rgba(124,58,237,0.08); }
+  .opt-card h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .opt-card ul { list-style: none; padding: 0; }
+  .opt-card ul li { font-size: 11px; color: var(--text2); padding: 2px 0; }
+  .opt-card ul li::before { content: '• '; color: var(--accent3); }
+
+  /* LLD DB SCHEMA */
+  .schema-table { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+  .schema-header { background: var(--bg4); padding: 10px 16px; font-size: 12px; font-weight: 700; color: var(--accent3); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+  .schema-field { display: grid; grid-template-columns: 160px 100px 60px 1fr; gap: 8px; padding: 8px 16px; border-bottom: 1px solid var(--border); font-size: 11px; align-items: center; }
+  .schema-field:last-child { border-bottom: none; }
+  .schema-field .fname { color: var(--text); font-weight: 500; font-family: monospace; }
+  .schema-field .ftype { color: var(--teal2); font-family: monospace; }
+  .schema-field .fmod { }
+  .schema-field .fdesc { color: var(--text3); }
+
+  /* EXTENSION UI */
+  .ext-frame { width: 320px; background: var(--bg); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; font-size: 12px; margin: 0 auto; }
+  .ext-header { background: linear-gradient(135deg, var(--accent), #5b21b6); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .ext-header h3 { font-size: 14px; font-weight: 700; color: white; }
+  .ext-body { padding: 14px 16px; }
+  .ext-context { background: var(--bg3); border-left: 3px solid var(--accent); border-radius: 4px; padding: 8px 10px; margin-bottom: 12px; font-size: 11px; color: var(--text2); }
+  .ext-context strong { color: var(--text); display: block; font-size: 10px; margin-bottom: 2px; color: var(--text3); }
+
+  /* ROADMAP */
+  .phase { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .phase::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+  .phase.p1::before { background: var(--accent); }
+  .phase.p2::before { background: var(--teal); }
+  .phase.p3::before { background: var(--amber); }
+  .phase-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .phase-title { font-size: 15px; font-weight: 600; }
+  .phase-duration { font-size: 11px; color: var(--text3); background: var(--bg4); padding: 3px 10px; border-radius: 100px; }
+  .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px; }
+  .feature-list li { font-size: 12px; color: var(--text2); padding: 6px 10px; background: var(--bg4); border-radius: 6px; display: flex; align-items: center; gap: 6px; }
+  .feature-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); flex-shrink: 0; }
+
+  /* WEB WIREFRAME */
+  .web-frame { background: var(--bg); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; width: 100%; }
+  .web-titlebar { background: var(--bg4); padding: 8px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+  .web-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .web-url { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 10px; color: var(--text3); margin: 0 12px; }
+  .web-sidebar { width: 220px; background: var(--bg3); border-right: 1px solid var(--border); padding: 14px; flex-shrink: 0; min-height: 400px; }
+  .web-main { flex: 1; padding: 20px; background: var(--bg); min-height: 400px; }
+  .web-layout { display: flex; }
+  .sidebar-item { padding: 8px 10px; border-radius: 6px; font-size: 11px; color: var(--text2); margin-bottom: 2px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .sidebar-item.active { background: rgba(124,58,237,0.15); color: var(--accent3); }
+  .sidebar-item:hover:not(.active) { background: var(--bg4); }
+  .dash-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+  .dash-card h4 { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .dash-stat { display: flex; gap: 16px; }
+  .stat { text-align: center; flex: 1; }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--accent3); }
+  .stat-label { font-size: 10px; color: var(--text3); }
+  .model-pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.25); border-radius: 100px; padding: 3px 10px; font-size: 10px; color: var(--teal2); margin-bottom: 12px; }
+  .reply-card { background: var(--bg4); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 11px; color: var(--text2); cursor: pointer; transition: all 0.15s; position: relative; }
+  .reply-card:hover { border-color: var(--accent); }
+  .reply-card .tone-badge { position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+  /* COST TABLE */
+  .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .cost-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .cost-card h4 { font-size: 12px; color: var(--text3); margin-bottom: 6px; font-weight: 500; }
+  .cost-price { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .cost-desc { font-size: 11px; color: var(--text3); }
+
+  /* ACCENT LINE */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* CODE BLOCK */
+  pre { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; font-size: 11px; color: #a3e635; overflow-x: auto; margin-bottom: 16px; font-family: 'Fira Code', 'Consolas', monospace; line-height: 1.6; }
+  code { font-family: 'Fira Code', 'Consolas', monospace; font-size: 11px; background: var(--bg4); padding: 1px 5px; border-radius: 3px; color: var(--teal2); }
+
+  /* PRINT */
+  @media print {
+    nav { display: none; }
+    body { background: white; color: black; }
+    .card, .toggle-section, .phase, .arch-diagram { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Shadow Chats <span>v1.0 Complete Docs</span></div>
+  <a href="#overview" class="active">Overview</a>
+  <a href="#prd">PRD</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#hld">HLD</a>
+  <a href="#lld">LLD</a>
+  <a href="#ai-engine">AI Engine</a>
+  <a href="#wireframes">Wireframes</a>
+  <a href="#screens">Screens</a>
+  <a href="#extension">Extension</a>
+  <a href="#api">API Docs</a>
+  <a href="#db">Database</a>
+  <a href="#roadmap">Roadmap</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">📱 Complete Product Documentation</div>
+    <h1>Shadow Chats<br><span>Reply Smarter. Every Time.</span></h1>
+    <p>AI-powered reply assistant for WhatsApp, Instagram, and any messaging app. Reads context, detects tone, suggests perfect replies — built Web-first with React Native for a single hybrid codebase across Web, Android, iOS, and Browser Extension.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📋 <strong>PRD</strong> Product Requirements</div>
+      <div class="hero-meta-item">🏗️ <strong>HLD</strong> High-Level Design</div>
+      <div class="hero-meta-item">⚙️ <strong>LLD</strong> Low-Level Design</div>
+      <div class="hero-meta-item">📐 <strong>Wireframes</strong> All Screens</div>
+      <div class="hero-meta-item">🔌 <strong>API</strong> Full Spec</div>
+      <div class="hero-meta-item">🤖 <strong>AI</strong> Dual Engine</div>
+    </div>
+    <div class="doc-grid">
+      <div class="doc-card" onclick="document.getElementById('prd').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">📋</div><h4>PRD</h4><p>Goals, users, features, success metrics</p>
+      </div>
+      <div class="doc-card" onclick="document.getElementById('architecture').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">🏗️</div><h4>Architecture</h4><p>System design, components, data flow</p>
+      </div>
+      <div class="doc-card" onclick="document.getElementById('hld').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">📐</div><h4>HLD</h4><p>Service breakdown, APIs, infra</p>
+      </div>
+      <div class="doc-card" onclick="document.getElementById('lld').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">⚙️</div><h4>LLD</h4><p>Class design, DB schema, logic</p>
+      </div>
+      <div class="doc-card" onclick="document.getElementById('ai-engine').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">🤖</div><h4>AI Engine</h4><p>Groq, Gemini, own model — switchable</p>
+      </div>
+      <div class="doc-card" onclick="document.getElementById('wireframes').scrollIntoView({behavior:'smooth'})">
+        <div class="icon">🎨</div><h4>Wireframes</h4><p>Mobile, web, extension screens</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PRD ============ -->
+<section id="prd">
+<div class="container">
+  <div class="section-tag">Document 01 — PRD</div>
+  <div class="section-title">Product Requirements Document</div>
+  <div class="section-desc">Full specification of what Shadow Chats is, why it exists, who uses it, and what it must do.</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>🎯 Problem Statement</h3>
+      <p>People often don't know what to reply — especially under social pressure, with a crush, in a heated argument, or when they want to sound perfect. Typing and retyping takes time. Ghosting happens because replies feel too hard. Shadow Chats solves this by generating context-aware, tone-matched reply suggestions instantly.</p>
+    </div>
+    <div class="card">
+      <h3>👤 Target Users</h3>
+      <p>Primary: 18–28 year olds in India using WhatsApp and Instagram daily. Secondary: professionals who need help with formal/work chats. Tertiary: anyone who struggles with social anxiety or language barriers while chatting.</p>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Core Feature Set</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Description</th><th>Priority</th><th>Phase</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reply Generator</strong></td><td>Generate 3–5 context-aware reply options from chat screenshot or pasted text</td><td><span class="tag tag-red">P0 Critical</span></td><td>Phase 1 (Web)</td></tr>
+        <tr><td><strong>Tone Selector</strong></td><td>User picks mood: Flirty, Funny, Formal, Savage, Caring, Chill</td><td><span class="tag tag-red">P0 Critical</span></td><td>Phase 1 (Web)</td></tr>
+        <tr><td><strong>Reply Meter</strong></td><td>Live emotional intensity gauge — reads vibe of conversation (hot/cold/neutral)</td><td><span class="tag tag-amber">P1 High</span></td><td>Phase 1 (Web)</td></tr>
+        <tr><td><strong>Screenshot OCR</strong></td><td>Upload WhatsApp/Instagram screenshot, auto-extract conversation text</td><td><span class="tag tag-red">P0 Critical</span></td><td>Phase 1 (Web)</td></tr>
+        <tr><td><strong>Web Dashboard</strong></td><td>Full web app — history, settings, model config, analytics</td><td><span class="tag tag-red">P0 Critical</span></td><td>Phase 1 (Web)</td></tr>
+        <tr><td><strong>Android + iOS App</strong></td><td>React Native app from same web codebase using Expo — same UI, native feel</td><td><span class="tag tag-amber">P1 High</span></td><td>Phase 2 (App)</td></tr>
+        <tr><td><strong>WhatsApp Extension</strong></td><td>Browser extension that adds a Shadow Chats button inside WhatsApp Web</td><td><span class="tag tag-amber">P1 High</span></td><td>Phase 2 (Extension)</td></tr>
+        <tr><td><strong>Instagram Extension</strong></td><td>Browser extension for Instagram DM page</td><td><span class="tag tag-amber">P1 High</span></td><td>Phase 2 (Extension)</td></tr>
+        <tr><td><strong>AI Engine Toggle</strong></td><td>User can switch between Free API mode (Groq/Gemini) and Self-hosted model</td><td><span class="tag tag-amber">P1 High</span></td><td>Phase 2</td></tr>
+        <tr><td><strong>Conversation Memory</strong></td><td>Store chat history, learn user's tone preferences over time</td><td><span class="tag tag-green">P2 Medium</span></td><td>Phase 2</td></tr>
+        <tr><td><strong>Custom Persona</strong></td><td>User defines their "chat personality" — AI always matches it</td><td><span class="tag tag-blue">P3 Nice</span></td><td>Phase 3</td></tr>
+        <tr><td><strong>Multi-language</strong></td><td>Hindi, Bengali, Hinglish reply generation</td><td><span class="tag tag-blue">P3 Nice</span></td><td>Phase 3</td></tr>
+        <tr><td><strong>Voice Input</strong></td><td>Speak the conversation, get text replies</td><td><span class="tag tag-blue">P3 Nice</span></td><td>Phase 3</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Success Metrics (KPIs)</h3>
+  <div class="card-grid">
+    <div class="card"><h3>📊 Engagement</h3><p>Day-7 retention ≥ 40%. Average session ≥ 3 reply generations. 70% of suggestions copied/used within session.</p></div>
+    <div class="card"><h3>⚡ Performance</h3><p>Reply generation under 2s (Groq/Gemini). Screenshot OCR under 3s. Extension inject under 500ms after page load.</p></div>
+    <div class="card"><h3>📈 Growth</h3><p>1000 MAU by end of Phase 1. 5000 MAU by end of Phase 2. NPS score ≥ 50.</p></div>
+    <div class="card"><h3>💰 Monetization</h3><p>Free: 20 generations/day. Pro (₹99/mo): unlimited. Team (₹299/mo): 5 users + custom persona.</p></div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">User Flows</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>📱 Mobile App Flow</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>1. Open App / Capture</h4><p>User screenshots chat or pastes message text</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot teal"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>2. OCR + Context Parse</h4><p>App extracts text, identifies last message to reply to</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot amber"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>3. Tone Select</h4><p>User picks tone: Flirty / Formal / Funny / Savage / Caring</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>4. AI Generates Replies</h4><p>3–5 options shown, Reply Meter shows vibe score</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot"></div></div>
+          <div class="flow-content"><h4>5. Copy & Send</h4><p>User taps reply → auto-copy to clipboard → switches back to chat</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🌐 Extension Flow</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>1. Open WhatsApp Web / Instagram</h4><p>Extension auto-detects the messaging page</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot teal"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>2. ✨ Button Appears</h4><p>Floating Shadow Chats button injected next to input bar</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot amber"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>3. Context Auto-Read</h4><p>Extension reads last 10 messages from DOM</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector"></div></div>
+          <div class="flow-content"><h4>4. Panel Opens</h4><p>Sidebar panel shows reply suggestions + tone controls</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-line"><div class="flow-dot"></div></div>
+          <div class="flow-content"><h4>5. One-click Insert</h4><p>Click reply → auto-inserts into input box → user just hits Enter</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section id="architecture">
+<div class="container">
+  <div class="section-tag">Document 02 — Architecture</div>
+  <div class="section-title">System Architecture</div>
+  <div class="section-desc">Full system design showing all components, services, and data flows. Built Web-first using React Native Web — one hybrid codebase that runs as Web App, Android App, iOS App, and Browser Extension.</div>
+
+  <div class="arch-diagram">
+    <div class="arch-layer">
+      <div class="arch-layer-label">CLIENT LAYER</div>
+      <div class="arch-row">
+        <div class="arch-box teal"><h5>🌐 Web App — Phase 1</h5><p>React Native Web (first target)</p></div>
+        <div class="arch-box purple"><h5>📱 Android + iOS — Phase 2</h5><p>React Native (same codebase)</p></div>
+        <div class="arch-box amber"><h5>🔌 Chrome Extension — Phase 2</h5><p>Manifest V3, Content Scripts</p></div>
+        <div class="arch-box blue"><h5>♻️ Shared Core</h5><p>One RN codebase → all platforms</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ REST / WebSocket / SSE</div>
+    <div class="arch-layer">
+      <div class="arch-layer-label">API GATEWAY LAYER</div>
+      <div class="arch-row">
+        <div class="arch-box purple"><h5>🔒 Auth Service</h5><p>JWT + Firebase Auth</p></div>
+        <div class="arch-box purple"><h5>🚦 Rate Limiter</h5><p>Redis, per-user quotas</p></div>
+        <div class="arch-box purple"><h5>📡 API Gateway</h5><p>Express.js / FastAPI</p></div>
+        <div class="arch-box purple"><h5>📦 File Upload</h5><p>Multipart, S3 / Cloudinary</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ Internal Service Calls</div>
+    <div class="arch-layer">
+      <div class="arch-layer-label">CORE SERVICES</div>
+      <div class="arch-row">
+        <div class="arch-box teal"><h5>📷 OCR Service</h5><p>Tesseract.js / Google Vision</p></div>
+        <div class="arch-box teal"><h5>🧹 NLP Preprocessor</h5><p>Cleans, chunks context</p></div>
+        <div class="arch-box teal"><h5>🎭 Emotion Classifier</h5><p>HuggingFace DistilRoBERTa</p></div>
+        <div class="arch-box teal"><h5>✍️ Reply Generator</h5><p>AI Engine (pluggable)</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ AI Engine Abstraction Layer</div>
+    <div class="arch-layer">
+      <div class="arch-layer-label">AI ENGINE LAYER (SWITCHABLE)</div>
+      <div class="arch-row">
+        <div class="arch-box green"><h5>⚡ Groq API</h5><p>Llama 3 / Mixtral — free tier</p></div>
+        <div class="arch-box green"><h5>🌟 Gemini API</h5><p>Flash 1.5 — 1M tokens/day free</p></div>
+        <div class="arch-box amber"><h5>🤗 Custom Model</h5><p>Self-hosted Mistral 7B / Phi-3</p></div>
+        <div class="arch-box gray"><h5>🔄 Fallback Chain</h5><p>Auto-switch if quota hit</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕ Read / Write</div>
+    <div class="arch-layer">
+      <div class="arch-layer-label">DATA LAYER</div>
+      <div class="arch-row">
+        <div class="arch-box blue"><h5>🗄️ PostgreSQL</h5><p>Users, sessions, history</p></div>
+        <div class="arch-box blue"><h5>⚡ Redis Cache</h5><p>Rate limits, session cache</p></div>
+        <div class="arch-box blue"><h5>🪣 Object Storage</h5><p>Screenshots, uploads</p></div>
+        <div class="arch-box blue"><h5>📊 Analytics DB</h5><p>Usage metrics, A/B tests</p></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Tech Stack Summary</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Technology</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Web App (Phase 1)</td><td><span class="tag tag-teal">React Native Web</span> <span class="tag tag-teal">Expo</span> <span class="tag tag-teal">TypeScript</span> <span class="tag tag-teal">TailwindCSS (NativeWind)</span></td><td>Web-first, same code runs in browser — no extra work</td></tr>
+        <tr><td>Android + iOS App (Phase 2)</td><td><span class="tag tag-purple">React Native</span> <span class="tag tag-purple">Expo</span> <span class="tag tag-purple">React Navigation</span> <span class="tag tag-purple">Zustand</span></td><td>Same codebase as web, Expo builds APK + IPA, zero rewrite</td></tr>
+        <tr><td>Browser Extension</td><td><span class="tag tag-amber">MV3</span> <span class="tag tag-amber">Content Script</span> <span class="tag tag-amber">Service Worker</span></td><td>Chrome/Edge compatible, DOM injection</td></tr>
+        <tr><td>Backend API</td><td><span class="tag tag-green">FastAPI (Python)</span> <span class="tag tag-green">PostgreSQL</span> <span class="tag tag-green">Redis</span></td><td>Fast, async, ML-friendly, easy AI lib integration</td></tr>
+        <tr><td>OCR</td><td><span class="tag tag-blue">Google Vision API</span> OR <span class="tag tag-blue">Tesseract.js</span></td><td>Free tier Vision, Tesseract as self-hosted fallback</td></tr>
+        <tr><td>Emotion Detection</td><td><span class="tag tag-pink">HuggingFace Transformers</span> <span class="tag tag-pink">DistilRoBERTa</span></td><td>Pre-trained emotion model, lightweight, fast</td></tr>
+        <tr><td>AI Generation</td><td><span class="tag tag-amber">Groq (primary)</span> <span class="tag tag-amber">Gemini Flash (secondary)</span> <span class="tag tag-amber">Ollama (self-host)</span></td><td>All free tiers, switchable via config</td></tr>
+        <tr><td>Auth</td><td><span class="tag tag-red">Firebase Auth</span> OR <span class="tag tag-red">Supabase Auth</span></td><td>Google/Phone login, free tier generous</td></tr>
+        <tr><td>Hosting</td><td><span class="tag tag-blue">Railway.app</span> OR <span class="tag tag-blue">Render.com</span></td><td>Free tier sufficient for MVP, easy deploy</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ============ HLD ============ -->
+<section id="hld">
+<div class="container">
+  <div class="section-tag">Document 03 — HLD</div>
+  <div class="section-title">High-Level Design</div>
+  <div class="section-desc">Service-level design, API contracts, communication patterns, and infrastructure decisions.</div>
+
+  <h3 style="margin: 0 0 16px; font-size: 17px;">Service Breakdown</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🔐 Auth Service</h3>
+      <p><strong>Responsibilities:</strong> User registration, login, JWT issue/refresh, Google OAuth, rate limit enforcement per user tier.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> POST /auth/register, POST /auth/login, POST /auth/refresh, GET /auth/me</p>
+    </div>
+    <div class="card">
+      <h3>📷 OCR Service</h3>
+      <p><strong>Responsibilities:</strong> Accept screenshot upload, extract text using Google Vision (primary) or Tesseract (fallback), return structured conversation array with speaker labels.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> POST /ocr/extract — returns {messages: [{speaker, text, timestamp}]}</p>
+    </div>
+    <div class="card">
+      <h3>🤖 Reply Service</h3>
+      <p><strong>Responsibilities:</strong> Accept conversation context + tone preference, call AI engine, return reply suggestions + emotion score. Core of the product.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> POST /reply/generate, POST /reply/regenerate, GET /reply/history</p>
+    </div>
+    <div class="card">
+      <h3>🎭 Emotion Service</h3>
+      <p><strong>Responsibilities:</strong> Run DistilRoBERTa on input text, return emotion label (anger/joy/sadness/surprise/fear/neutral) + intensity score 0–100 for the Reply Meter.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> POST /emotion/analyze — returns {label, score, breakdown}</p>
+    </div>
+    <div class="card">
+      <h3>👤 User Service</h3>
+      <p><strong>Responsibilities:</strong> Profile management, persona settings, tone preferences, subscription status, daily quota tracking.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> GET/PUT /user/profile, GET /user/quota, PUT /user/persona</p>
+    </div>
+    <div class="card">
+      <h3>⚙️ Config Service</h3>
+      <p><strong>Responsibilities:</strong> Store and serve user's AI engine preference (Groq / Gemini / Self-hosted). Validate API keys. Handle fallback logic when quota exhausted.</p>
+      <p style="margin-top:8px;"><strong>Endpoints:</strong> GET/PUT /config/ai-engine, POST /config/test-key</p>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">API Request / Response Contracts</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>POST /reply/generate</h3>
+      <pre>{
+  "context": [
+    {"speaker":"them","text":"Hey why u ignoring me"},
+    {"speaker":"me","text":"I wasn't..."},
+    {"speaker":"them","text":"ok whatever lol"}
+  ],
+  "tone": "flirty",
+  "count": 3,
+  "language": "hinglish",
+  "engine": "groq"  // or "gemini" / "custom"
+}</pre>
+      <pre style="color:#7dd3fc">{
+  "replies": [
+    {"text":"Ignore you? Bro I was thinking about you 😏","score":87},
+    {"text":"Waiting for the right moment yaar...","score":74},
+    {"text":"lol you wish I'd ignore you","score":68}
+  ],
+  "emotion": {"label":"hurt","score":62},
+  "engine_used": "groq",
+  "tokens_used": 312
+}</pre>
+    </div>
+    <div class="card">
+      <h3>POST /ocr/extract</h3>
+      <pre>{
+  "image_url": "https://...",
+  // OR
+  "image_base64": "data:image/jpeg;base64,..."
+}</pre>
+      <pre style="color:#7dd3fc">{
+  "success": true,
+  "messages": [
+    {
+      "speaker": "them",
+      "text": "Hey why u ignoring me",
+      "position": "left",
+      "timestamp": "10:43 PM"
+    }
+  ],
+  "platform_detected": "whatsapp",
+  "confidence": 0.94
+}</pre>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">AI Engine Abstraction Layer</h3>
+  <div class="card">
+    <h3>🔄 Engine Router Logic</h3>
+    <p>The backend uses an <strong>AIEngineRouter</strong> class that wraps all AI providers. User preference is stored per-account. The router automatically falls back if quota is hit:</p>
+    <pre>class AIEngineRouter:
+  engines = ["groq", "gemini", "custom"]
+  
+  async def generate(context, tone, engine_pref):
+    engine = engine_pref or user.preferred_engine
+    
+    try:
+      return await self._call(engine, context, tone)
+    except QuotaExceeded:
+      fallback = self._next_engine(engine)
+      return await self._call(fallback, context, tone)
+  
+  def _build_prompt(context, tone):
+    system = f"""You are a chat reply assistant.
+    Generate {count} replies in {tone} tone.
+    Context language: {language}.
+    Reply ONLY with JSON array of reply strings.
+    Max 2 sentences per reply. Sound natural."""
+    return system, format_context(context)</pre>
+    <p>This means a user can pick "Groq" in settings but if their free quota runs out mid-session, the app silently switches to Gemini without breaking the experience.</p>
+  </div>
+</div>
+</section>
+
+<!-- ============ LLD ============ -->
+<section id="lld">
+<div class="container">
+  <div class="section-tag">Document 04 — LLD</div>
+  <div class="section-title">Low-Level Design</div>
+  <div class="section-desc">Class structures, database schema, component logic, and implementation-level details.</div>
+
+  <h3 style="margin: 0 0 16px; font-size: 17px;">Database Schema</h3>
+
+  <div class="schema-table">
+    <div class="schema-header">🗂️ users</div>
+    <div class="schema-field"><span class="fname">id</span><span class="ftype">UUID</span><span class="tag tag-red">PK</span><span class="fdesc">Primary key</span></div>
+    <div class="schema-field"><span class="fname">email</span><span class="ftype">VARCHAR(255)</span><span class="tag tag-amber">UNIQUE</span><span class="fdesc">User email</span></div>
+    <div class="schema-field"><span class="fname">phone</span><span class="ftype">VARCHAR(20)</span><span class="tag tag-green">NULL</span><span class="fdesc">Optional phone number</span></div>
+    <div class="schema-field"><span class="fname">display_name</span><span class="ftype">VARCHAR(100)</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">Display name</span></div>
+    <div class="schema-field"><span class="fname">plan</span><span class="ftype">ENUM</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">'free' | 'pro' | 'team'</span></div>
+    <div class="schema-field"><span class="fname">preferred_engine</span><span class="ftype">ENUM</span><span class="tag tag-green">DEFAULT 'groq'</span><span class="fdesc">'groq' | 'gemini' | 'custom'</span></div>
+    <div class="schema-field"><span class="fname">persona_prompt</span><span class="ftype">TEXT</span><span class="tag tag-green">NULL</span><span class="fdesc">Custom personality description</span></div>
+    <div class="schema-field"><span class="fname">daily_count</span><span class="ftype">INT</span><span class="tag tag-green">DEFAULT 0</span><span class="fdesc">Resets daily via cron</span></div>
+    <div class="schema-field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span><span class="tag tag-blue">AUTO</span><span class="fdesc">Account creation time</span></div>
+  </div>
+
+  <div class="schema-table">
+    <div class="schema-header">💬 reply_sessions</div>
+    <div class="schema-field"><span class="fname">id</span><span class="ftype">UUID</span><span class="tag tag-red">PK</span><span class="fdesc">Session ID</span></div>
+    <div class="schema-field"><span class="fname">user_id</span><span class="ftype">UUID</span><span class="tag tag-amber">FK → users</span><span class="fdesc">Owner</span></div>
+    <div class="schema-field"><span class="fname">platform</span><span class="ftype">ENUM</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">'whatsapp' | 'instagram' | 'other'</span></div>
+    <div class="schema-field"><span class="fname">context_text</span><span class="ftype">TEXT</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">Full conversation context passed</span></div>
+    <div class="schema-field"><span class="fname">tone</span><span class="ftype">VARCHAR(50)</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">Tone selected by user</span></div>
+    <div class="schema-field"><span class="fname">replies_json</span><span class="ftype">JSONB</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">Array of generated replies + scores</span></div>
+    <div class="schema-field"><span class="fname">emotion_label</span><span class="ftype">VARCHAR(30)</span><span class="tag tag-green">NULL</span><span class="fdesc">Detected emotion from context</span></div>
+    <div class="schema-field"><span class="fname">emotion_score</span><span class="ftype">INT</span><span class="tag tag-green">0–100</span><span class="fdesc">Emotion intensity</span></div>
+    <div class="schema-field"><span class="fname">engine_used</span><span class="ftype">VARCHAR(20)</span><span class="tag tag-green">NOT NULL</span><span class="fdesc">Which AI engine served this</span></div>
+    <div class="schema-field"><span class="fname">reply_selected</span><span class="ftype">TEXT</span><span class="tag tag-green">NULL</span><span class="fdesc">Which reply user picked (feedback)</span></div>
+    <div class="schema-field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span><span class="tag tag-blue">AUTO</span><span class="fdesc">Time of generation</span></div>
+  </div>
+
+  <div class="schema-table">
+    <div class="schema-header">🔑 api_configs</div>
+    <div class="schema-field"><span class="fname">user_id</span><span class="ftype">UUID</span><span class="tag tag-red">PK + FK</span><span class="fdesc">One config per user</span></div>
+    <div class="schema-field"><span class="fname">groq_key</span><span class="ftype">TEXT</span><span class="tag tag-green">ENCRYPTED</span><span class="fdesc">User's own Groq API key (optional)</span></div>
+    <div class="schema-field"><span class="fname">gemini_key</span><span class="ftype">TEXT</span><span class="tag tag-green">ENCRYPTED</span><span class="fdesc">User's own Gemini key (optional)</span></div>
+    <div class="schema-field"><span class="fname">custom_endpoint</span><span class="ftype">VARCHAR(500)</span><span class="tag tag-green">NULL</span><span class="fdesc">Self-hosted model URL</span></div>
+    <div class="schema-field"><span class="fname">custom_model_name</span><span class="ftype">VARCHAR(100)</span><span class="tag tag-green">NULL</span><span class="fdesc">e.g. 'mistral:7b', 'phi3'</span></div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Core Classes (Python Backend)</h3>
+  <div class="card">
+    <pre>
+# ===== CORE MODELS =====
+class ReplyRequest(BaseModel):
+    context: List[Message]          # conversation messages
+    tone: ToneEnum                  # flirty|funny|formal|savage|caring|chill
+    count: int = 3                  # how many replies
+    language: str = "en"            # en|hi|bn|hinglish
+    engine: Optional[EngineEnum]    # override user's default
+
+class Message(BaseModel):
+    speaker: Literal["me", "them"]
+    text: str
+    timestamp: Optional[str]
+
+class ReplyResponse(BaseModel):
+    replies: List[ReplyOption]
+    emotion: EmotionResult
+    engine_used: str
+    tokens_used: int
+    session_id: str
+
+class ReplyOption(BaseModel):
+    text: str
+    score: int          # confidence/quality 0-100
+
+class EmotionResult(BaseModel):
+    label: str          # anger|joy|sadness|fear|surprise|neutral
+    score: int          # intensity 0-100
+    breakdown: dict     # {"anger": 12, "joy": 65, ...}
+
+# ===== AI ENGINE ROUTER =====
+class AIEngineRouter:
+    def __init__(self):
+        self.engines = {
+            "groq": GroqEngine(),
+            "gemini": GeminiEngine(),
+            "custom": CustomModelEngine()
+        }
+        self.fallback_order = ["groq", "gemini", "custom"]
+
+    async def generate(self, req: ReplyRequest, user: User) -> ReplyResponse:
+        engine_name = req.engine or user.preferred_engine
+        for attempt_engine in [engine_name] + self.fallback_order:
+            try:
+                engine = self.engines[attempt_engine]
+                if await engine.is_available():
+                    result = await engine.generate(req)
+                    result.engine_used = attempt_engine
+                    return result
+            except (QuotaExceededException, RateLimitException):
+                continue
+        raise AllEnginesExhaustedException()
+
+# ===== INDIVIDUAL ENGINES =====
+class GroqEngine:
+    BASE_URL = "https://api.groq.com/openai/v1/chat/completions"
+    MODEL = "llama3-8b-8192"  # or mixtral-8x7b-32768
+    
+    async def generate(self, req: ReplyRequest) -> ReplyResponse:
+        prompt = build_reply_prompt(req)
+        response = await httpx.post(self.BASE_URL, json={
+            "model": self.MODEL,
+            "messages": prompt,
+            "temperature": 0.85,
+            "max_tokens": 500
+        }, headers={"Authorization": f"Bearer {GROQ_API_KEY}"})
+        return parse_llm_response(response.json())
+
+class GeminiEngine:
+    BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+    
+    async def generate(self, req: ReplyRequest) -> ReplyResponse:
+        prompt = build_reply_prompt(req)
+        # Gemini has different format — adapter handles conversion
+        ...
+
+class CustomModelEngine:
+    # Connects to Ollama or any OpenAI-compatible local endpoint
+    async def generate(self, req: ReplyRequest) -> ReplyResponse:
+        endpoint = user.custom_endpoint or "http://localhost:11434/v1"
+        model = user.custom_model_name or "mistral"
+        ...
+    </pre>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Hybrid App Architecture (React Native + Expo)</h3>
+  <div class="card" style="margin-bottom:16px;">
+    <h3>♻️ Why React Native Web (Hybrid Approach)</h3>
+    <p>Instead of building Web in React, then Android in Kotlin, then iOS in Swift — <strong>one single React Native + Expo codebase</strong> compiles to all three. Write once:</p>
+    <ul style="margin-top:10px; padding-left:16px; color:var(--text2); font-size:13px; line-height:2;">
+      <li><code>expo build:web</code> → deploys to any hosting (Vercel/Netlify/Railway)</li>
+      <li><code>eas build --platform android</code> → builds APK / AAB for Play Store</li>
+      <li><code>eas build --platform ios</code> → builds IPA for App Store</li>
+    </ul>
+    <p style="margin-top:10px; color:var(--teal2);">Platform-specific code is isolated in <code>/src/platform/</code> — e.g. camera access, clipboard, share sheet.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Components</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>UI Layer (Screens)</td><td>HomeScreen, ReplyScreen, SettingsScreen, ToneSelector (RN Views)</td><td>Shared across Web + Android + iOS via React Native Web</td></tr>
+        <tr><td>Navigation</td><td>React Navigation (Stack + Tab) — expo-router on web</td><td>URL-based routing on web, native stack on mobile</td></tr>
+        <tr><td>State Management</td><td>Zustand stores: useReplyStore, useUserStore, useEngineStore</td><td>Global state, persisted via AsyncStorage (mobile) / localStorage (web)</td></tr>
+        <tr><td>API Layer</td><td>Axios + React Query — shared hooks: useGenerateReply, useOCR</td><td>All API calls, caching, loading/error states</td></tr>
+        <tr><td>Platform Bridge</td><td><code>/src/platform/camera.ts</code>, <code>clipboard.ts</code>, <code>share.ts</code></td><td>Native modules for mobile, browser APIs for web</td></tr>
+        <tr><td>Styling</td><td>NativeWind (Tailwind for RN) + StyleSheet for platform-specific</td><td>Consistent design tokens across all platforms</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ============ AI ENGINE ============ -->
+<section id="ai-engine">
+<div class="container">
+  <div class="section-tag">Document 05 — AI Engine</div>
+  <div class="section-title">Dual AI Engine System</div>
+  <div class="section-desc">Users can switch between Free Cloud APIs and Self-hosted Open Source models. The toggle lives in Settings — no app restart needed.</div>
+
+  <div class="toggle-section">
+    <div class="toggle-header">
+      <div class="toggle-title">⚡ Option A — Free Cloud APIs (Recommended for MVP)</div>
+      <div class="tag tag-green">Zero cost, instant setup</div>
+    </div>
+    <div class="option-grid">
+      <div class="opt-card selected" id="groq-card" onclick="selectEngine('groq')">
+        <h5>⚡ Groq API</h5>
+        <ul>
+          <li>Llama 3 8B / 70B models</li>
+          <li>Mixtral 8x7B available</li>
+          <li>OpenAI-compatible API</li>
+          <li>~200 req/min free tier</li>
+          <li>Fastest inference (100+ tok/s)</li>
+          <li>Best for Reply Meter (latency)</li>
+        </ul>
+        <div style="margin-top:10px;"><span class="tag tag-green">PRIMARY RECOMMENDED</span></div>
+      </div>
+      <div class="opt-card" id="gemini-card" onclick="selectEngine('gemini')">
+        <h5>🌟 Google Gemini Flash</h5>
+        <ul>
+          <li>Gemini 1.5 Flash model</li>
+          <li>1M tokens/day free</li>
+          <li>1M token context window</li>
+          <li>Multimodal (image input)</li>
+          <li>Good for OCR + context</li>
+          <li>Can process screenshot directly</li>
+        </ul>
+        <div style="margin-top:10px;"><span class="tag tag-teal">SECONDARY / FALLBACK</span></div>
+      </div>
+      <div class="opt-card" id="together-card" onclick="selectEngine('together')">
+        <h5>🔥 Together AI</h5>
+        <ul>
+          <li>$25 free credits on signup</li>
+          <li>Llama 3.3, DeepSeek-V3</li>
+          <li>OpenAI-compatible</li>
+          <li>Good quality models</li>
+          <li>Pay-as-you-go after credits</li>
+        </ul>
+        <div style="margin-top:10px;"><span class="tag tag-amber">BONUS OPTION</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toggle-section">
+    <div class="toggle-header">
+      <div class="toggle-title">🤗 Option B — Self-Hosted Open Source Models</div>
+      <div class="tag tag-amber">Full control, your hardware</div>
+    </div>
+    <div class="option-grid">
+      <div class="opt-card">
+        <h5>🦙 Ollama (Local)</h5>
+        <ul>
+          <li>Run Mistral 7B / Phi-3 locally</li>
+          <li>OpenAI-compatible REST API</li>
+          <li>Works offline, zero API cost</li>
+          <li>GPU: 4GB+ VRAM needed</li>
+          <li>Best for dev/testing</li>
+          <li>1-command install</li>
+        </ul>
+      </div>
+      <div class="opt-card">
+        <h5>🤗 HuggingFace Inference</h5>
+        <ul>
+          <li>DistilRoBERTa — Emotion detect</li>
+          <li>FLAN-T5 — Reply generation</li>
+          <li>Free serverless inference API</li>
+          <li>Your own model portfolio angle</li>
+          <li>"I built the emotion layer"</li>
+        </ul>
+      </div>
+      <div class="opt-card">
+        <h5>☁️ Cloudflare Workers AI</h5>
+        <ul>
+          <li>Llama 3 on their edge</li>
+          <li>10K neurons/day free</li>
+          <li>Ultra-low latency globally</li>
+          <li>Good for extension use case</li>
+          <li>No credit card required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Emotion Detection Module (Own Model Approach)</h3>
+  <div class="card">
+    <h3>🎭 Building Your Own Emotion Classifier</h3>
+    <p>This is the "I built something myself" part of the portfolio story. Use HuggingFace's pre-trained <code>j-hartmann/emotion-english-distilroberta-base</code> model exposed via a Flask API:</p>
+    <pre>
+# emotion_service.py — Your own Python microservice
+from transformers import pipeline
+from fastapi import FastAPI
+
+app = FastAPI()
+
+# Load once at startup
+emotion_classifier = pipeline(
+    "text-classification",
+    model="j-hartmann/emotion-english-distilroberta-base",
+    top_k=None  # get all emotion scores
+)
+
+@app.post("/analyze")
+async def analyze_emotion(text: str):
+    results = emotion_classifier(text)[0]
+    # Returns: [{"label":"joy","score":0.87}, {"label":"anger","score":0.05}, ...]
+    
+    top_emotion = max(results, key=lambda x: x['score'])
+    intensity = int(top_emotion['score'] * 100)
+    
+    return {
+        "label": top_emotion['label'],
+        "score": intensity,
+        "breakdown": {r['label']: round(r['score']*100) for r in results}
+    }
+</pre>
+    <p>This Flask/FastAPI service runs on the same server as your backend (or on HuggingFace Spaces for free). The Reply Generator then uses the emotion score to calibrate reply tone.</p>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Prompt Engineering — Reply Generation</h3>
+  <div class="card">
+    <pre>
+SYSTEM_PROMPT = """
+You are Shadow Chats, an expert at crafting perfect chat replies.
+
+TONE: {tone}
+TONE GUIDE:
+- flirty: playful, teasing, a little bold, use light emojis
+- funny: witty, unexpected, makes them smile/laugh
+- formal: professional, clear, respectful, no slang  
+- savage: sharp, confident, unbothered, short
+- caring: warm, empathetic, supportive
+- chill: casual, relaxed, no pressure
+
+LANGUAGE: {language}
+- hinglish: Mix Hindi words naturally with English (e.g. "yaar", "kya baat", "bilkul")
+- bengali: Bengali script or Romanized Bengali
+- en: Pure English
+
+RULES:
+1. Generate exactly {count} reply options
+2. Each reply max 2 sentences
+3. Sound like a real human, not a robot
+4. Match the emotional energy of the conversation
+5. Return ONLY a JSON array: ["reply1", "reply2", "reply3"]
+6. No explanations, no labels, just the array
+"""
+
+USER_PROMPT = """
+Conversation context:
+{formatted_context}
+
+Last message to reply to: "{last_message}"
+Generate {count} replies in {tone} tone.
+"""
+    </pre>
+  </div>
+</div>
+</section>
+
+<!-- ============ WIREFRAMES ============ -->
+<section id="wireframes">
+<div class="container">
+  <div class="section-tag">Document 06 — Wireframes</div>
+  <div class="section-title">Mobile App Wireframes</div>
+  <div class="section-desc">All key screens of the Android app — wireframe fidelity with interaction annotations.</div>
+
+  <div class="wireframe-grid">
+    <!-- ONBOARDING -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div style="background: linear-gradient(180deg, #1a0a2e 0%, #0d0d0f 100%); height: 100%; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <div style="font-size: 36px; margin-bottom: 12px;">💬✨</div>
+            <div style="font-size: 16px; font-weight: 700; color: white; margin-bottom: 8px;">Shadow Chats</div>
+            <div style="font-size: 10px; color: var(--text2); margin-bottom: 28px;">Reply smarter, every time</div>
+            <div style="width: 100%; background: var(--accent); border-radius: 20px; padding: 10px; font-size: 11px; color: white; margin-bottom: 8px;">Continue with Google</div>
+            <div style="width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 20px; padding: 10px; font-size: 11px; color: var(--text2);">Continue with Phone</div>
+            <div style="font-size: 9px; color: var(--text3); margin-top: 16px;">By continuing you agree to our Terms</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">01 — Onboarding</div>
+    </div>
+
+    <!-- HOME / CAPTURE -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="sc-header">
+            <div style="font-size: 14px; font-weight: 700; flex:1;">Shadow Chats</div>
+            <div style="font-size: 9px; color: var(--teal); background: rgba(6,182,212,0.1); padding: 2px 8px; border-radius: 8px;">⚡ Groq</div>
+          </div>
+          <div style="padding: 14px 12px;">
+            <div style="font-size: 10px; color: var(--text2); margin-bottom: 10px; font-weight: 500;">HOW DO YOU WANT TO START?</div>
+            <!-- upload card -->
+            <div style="border: 2px dashed var(--border2); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 10px; cursor: pointer;">
+              <div style="font-size: 22px; margin-bottom: 6px;">📸</div>
+              <div style="font-size: 11px; font-weight: 600; color: var(--text);">Upload Screenshot</div>
+              <div style="font-size: 9px; color: var(--text3);">WhatsApp, Instagram, any chat</div>
+            </div>
+            <div style="text-align: center; font-size: 9px; color: var(--text3); margin: 8px 0;">or</div>
+            <!-- paste card -->
+            <div style="background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px;">
+              <div style="font-size: 9px; color: var(--text3); margin-bottom: 6px;">PASTE THEIR MESSAGE</div>
+              <div style="background: var(--bg4); border-radius: 6px; padding: 8px; font-size: 10px; color: var(--text3);">Type or paste message here...</div>
+            </div>
+            <!-- quick history -->
+            <div style="font-size: 9px; color: var(--text3); margin: 10px 0 6px; font-weight: 600;">RECENT SESSIONS</div>
+            <div style="background: var(--bg3); border-radius: 8px; padding: 8px 10px; font-size: 9px; color: var(--text2); display: flex; justify-content: space-between; border: 1px solid var(--border);">
+              <span>Priya — Flirty 💜</span><span style="color: var(--text3);">2h ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">02 — Home / Capture</div>
+    </div>
+
+    <!-- REPLY GENERATION -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="sc-header">
+            <span style="cursor:pointer; color: var(--text2); font-size:12px;">←</span>
+            <div style="flex:1; padding-left: 8px;"><div class="sc-name">Reply Generator</div><div class="sc-status">Context loaded ✓</div></div>
+          </div>
+          <div class="sc-body">
+            <!-- Context Preview -->
+            <div style="background: var(--bg3); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; border-left: 2px solid var(--teal);">
+              <div style="font-size: 9px; color: var(--text3); margin-bottom: 4px;">CONTEXT PREVIEW</div>
+              <div style="font-size: 9px; color: var(--text2);">"ok whatever lol" — last message</div>
+            </div>
+            <!-- Reply Meter -->
+            <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+              <div style="font-size: 18px;">🌡️</div>
+              <div style="flex:1;">
+                <div style="font-size: 9px; color: var(--text3);">REPLY METER</div>
+                <div style="font-size: 10px; color: #f87171; font-weight: 600;">Slightly Hurt — 62/100</div>
+                <div style="width: 100%; height: 4px; background: var(--bg4); border-radius: 2px; margin-top: 3px;"><div style="width: 62%; height: 100%; background: linear-gradient(90deg, #ef4444, #f97316); border-radius: 2px;"></div></div>
+              </div>
+            </div>
+            <!-- Tone Bar -->
+            <div class="sc-tone-bar">
+              <div class="sc-tone active">Flirty</div>
+              <div class="sc-tone">Funny</div>
+              <div class="sc-tone">Caring</div>
+              <div class="sc-tone">Savage</div>
+            </div>
+            <!-- Replies -->
+            <div class="sc-magic">
+              <div class="sc-magic-label">✨ AI SUGGESTIONS</div>
+              <div class="sc-reply-opt">Ignore you? I was literally thinking about you 😏</div>
+              <div class="sc-reply-opt">lol you wish yaar, tell me what's up</div>
+              <div class="sc-reply-opt">Waiting for the right moment... 👀</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">03 — Reply Generator</div>
+    </div>
+
+    <!-- SETTINGS / AI ENGINE -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="sc-header">
+            <span style="cursor:pointer; color: var(--text2); font-size:12px;">←</span>
+            <div style="flex:1; padding-left: 8px;"><div class="sc-name">AI Engine Settings</div></div>
+          </div>
+          <div style="padding: 12px;">
+            <div style="font-size: 9px; color: var(--text3); font-weight: 600; margin-bottom: 8px;">SELECT ENGINE</div>
+            <!-- Groq -->
+            <div style="border: 1px solid var(--accent); background: rgba(124,58,237,0.08); border-radius: 8px; padding: 10px; margin-bottom: 6px;">
+              <div style="display:flex; justify-content: space-between; align-items: center;">
+                <div><div style="font-size: 11px; font-weight: 600;">⚡ Groq API</div><div style="font-size: 9px; color: var(--text3);">Llama 3 · Fastest</div></div>
+                <div style="width: 14px; height: 14px; border-radius: 50%; background: var(--accent);"></div>
+              </div>
+            </div>
+            <!-- Gemini -->
+            <div style="border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 6px;">
+              <div style="display:flex; justify-content: space-between; align-items: center;">
+                <div><div style="font-size: 11px; font-weight: 600;">🌟 Gemini Flash</div><div style="font-size: 9px; color: var(--text3);">Google · 1M tokens/day</div></div>
+                <div style="width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border2);"></div>
+              </div>
+            </div>
+            <!-- Custom -->
+            <div style="border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+              <div style="display:flex; justify-content: space-between; align-items: center;">
+                <div><div style="font-size: 11px; font-weight: 600;">🤗 Custom Model</div><div style="font-size: 9px; color: var(--text3);">Self-hosted Ollama</div></div>
+                <div style="width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border2);"></div>
+              </div>
+            </div>
+            <div style="font-size: 9px; color: var(--text3); font-weight: 600; margin-bottom: 6px;">USAGE TODAY</div>
+            <div style="background: var(--bg3); border-radius: 8px; padding: 10px; border: 1px solid var(--border);">
+              <div style="font-size: 10px; color: var(--text); margin-bottom: 4px;">12 / 20 generations used</div>
+              <div style="width: 100%; height: 4px; background: var(--bg4); border-radius: 2px;"><div style="width: 60%; height: 100%; background: var(--accent); border-radius: 2px;"></div></div>
+              <div style="font-size: 9px; color: var(--text3); margin-top: 4px;">Free plan · Resets in 11h</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">04 — AI Engine Settings</div>
+    </div>
+
+    <!-- PERSONA SETUP -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="sc-header">
+            <div style="flex:1;"><div class="sc-name">My Persona</div><div class="sc-status">Helps AI match your style</div></div>
+          </div>
+          <div style="padding: 12px;">
+            <div style="font-size: 9px; color: var(--text3); margin-bottom: 6px; font-weight: 600;">DEFAULT TONE</div>
+            <div class="sc-tone-bar" style="flex-wrap: wrap; gap: 4px;">
+              <div class="sc-tone active">Chill</div>
+              <div class="sc-tone">Flirty</div>
+              <div class="sc-tone">Funny</div>
+              <div class="sc-tone">Formal</div>
+            </div>
+            <div style="font-size: 9px; color: var(--text3); margin: 10px 0 6px; font-weight: 600;">DESCRIBE YOUR VIBE (optional)</div>
+            <div style="background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 8px; font-size: 9px; color: var(--text2); min-height: 60px;">I'm chill but also sarcastic. I use Hinglish a lot. Don't make replies too long...</div>
+            <div style="font-size: 9px; color: var(--text3); margin: 10px 0 6px; font-weight: 600;">LANGUAGE PREFERENCE</div>
+            <div style="background: var(--bg3); border: 1px solid var(--accent); border-radius: 8px; padding: 8px 10px; font-size: 10px; color: var(--accent3);">Hinglish (Mix) ✓</div>
+            <div style="margin-top: 14px; background: var(--accent); border-radius: 20px; padding: 10px; text-align: center; font-size: 10px; color: white;">Save Persona</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">05 — Persona Setup</div>
+    </div>
+
+    <!-- HISTORY -->
+    <div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="sc-header"><div class="sc-name" style="font-size:13px; font-weight:700;">Reply History</div></div>
+          <div style="padding: 10px;">
+            <div style="background: var(--bg3); border-radius: 8px; padding: 10px; margin-bottom: 8px; border: 1px solid var(--border);">
+              <div style="display:flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px;"><span style="font-weight:600;">Priya 💜</span><span style="color:var(--text3);">Today 2:34 PM</span></div>
+              <div style="font-size: 9px; color: var(--text2); margin-bottom: 4px;">"ok whatever lol" → Flirty</div>
+              <div style="font-size: 9px; color: var(--accent3); background: rgba(124,58,237,0.1); padding: 4px 6px; border-radius: 4px;">Used: "Waiting for the right moment... 👀"</div>
+            </div>
+            <div style="background: var(--bg3); border-radius: 8px; padding: 10px; margin-bottom: 8px; border: 1px solid var(--border);">
+              <div style="display:flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px;"><span style="font-weight:600;">Work Group</span><span style="color:var(--text3);">Yesterday</span></div>
+              <div style="font-size: 9px; color: var(--text2); margin-bottom: 4px;">"Can you take this task?" → Formal</div>
+              <div style="font-size: 9px; color: var(--teal); background: rgba(6,182,212,0.1); padding: 4px 6px; border-radius: 4px;">Used: "Sure, I'll have it by EOD"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">06 — History</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ WEB APP WIREFRAME ============ -->
+<section id="screens">
+<div class="container">
+  <div class="section-tag">Document 07 — Web App</div>
+  <div class="section-title">Web Dashboard Wireframe</div>
+  <div class="section-desc">Full-width web app with sidebar navigation — reply generation, history, analytics, and AI engine configuration.</div>
+
+  <div class="web-frame">
+    <div class="web-titlebar">
+      <div class="web-dot" style="background:#ef4444;"></div>
+      <div class="web-dot" style="background:#f59e0b;"></div>
+      <div class="web-dot" style="background:#10b981;"></div>
+      <div class="web-url">app.shadowchats.in</div>
+    </div>
+    <div class="web-layout">
+      <!-- Sidebar -->
+      <div class="web-sidebar">
+        <div style="font-size: 14px; font-weight: 700; color: var(--accent3); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">💬 Shadow Chats</div>
+        <div class="sidebar-item active">✨ Generate Reply</div>
+        <div class="sidebar-item">📋 History</div>
+        <div class="sidebar-item">🎭 Persona</div>
+        <div class="sidebar-item">🤖 AI Engine</div>
+        <div class="sidebar-item">📊 Analytics</div>
+        <div class="sidebar-item">⚙️ Settings</div>
+        <hr>
+        <div style="font-size: 10px; color: var(--text3); margin-bottom: 6px; font-weight: 600;">ENGINE STATUS</div>
+        <div class="model-pill">⚡ Groq · Active</div>
+        <div style="font-size: 10px; color: var(--text3); margin-top: 12px;">Usage today</div>
+        <div style="font-size: 18px; font-weight: 700; color: var(--text);">12 <span style="font-size: 11px; color: var(--text3); font-weight: 400;">/ 20</span></div>
+        <div style="width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 4px;"><div style="width:60%; height:100%; background: var(--accent); border-radius: 2px;"></div></div>
+      </div>
+      <!-- Main -->
+      <div class="web-main">
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <div style="flex:1; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 10px; color: var(--text3); margin-bottom: 6px; font-weight: 600;">PASTE CONVERSATION / UPLOAD SCREENSHOT</div>
+            <textarea style="width:100%; background: var(--bg4); border: 1px solid var(--border2); border-radius: 6px; color: var(--text2); padding: 10px; font-size: 12px; height: 80px; resize: none; font-family: inherit;">Priya: hey why aren't you replying
+Me: was busy yaar
+Priya: ok whatever lol</textarea>
+            <div style="display:flex; gap: 8px; margin-top: 10px; align-items: center;">
+              <div style="font-size: 11px; color: var(--text3);">Tone:</div>
+              <div class="sc-tone-bar" style="margin:0;">
+                <div class="sc-tone active" style="font-size:10px; padding: 4px 8px;">Flirty</div>
+                <div class="sc-tone" style="font-size:10px; padding: 4px 8px;">Funny</div>
+                <div class="sc-tone" style="font-size:10px; padding: 4px 8px;">Caring</div>
+                <div class="sc-tone" style="font-size:10px; padding: 4px 8px;">Formal</div>
+                <div class="sc-tone" style="font-size:10px; padding: 4px 8px;">Savage</div>
+              </div>
+              <div style="margin-left:auto; background: var(--accent); border-radius: 6px; padding: 6px 16px; font-size: 11px; color: white; cursor:pointer;">✨ Generate</div>
+            </div>
+          </div>
+          <div style="width: 160px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 14px; text-align: center;">
+            <div style="font-size: 10px; color: var(--text3); margin-bottom: 8px; font-weight: 600;">REPLY METER</div>
+            <div style="font-size: 32px; font-weight: 700; color: #f87171;">62</div>
+            <div style="font-size: 10px; color: #f87171; margin-bottom: 8px;">Slightly Hurt</div>
+            <div style="width: 100%; height: 6px; background: var(--bg4); border-radius: 3px;"><div style="width:62%; height:100%; background: linear-gradient(90deg,#ef4444,#f97316); border-radius:3px;"></div></div>
+          </div>
+        </div>
+        <!-- Generated Replies -->
+        <div style="font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 8px;">✨ GENERATED REPLIES</div>
+        <div class="reply-card">
+          Ignore you? I was literally thinking about you 😏
+          <span class="tone-badge tag-purple" style="background: rgba(124,58,237,0.15); color: var(--accent3);">Flirty</span>
+        </div>
+        <div class="reply-card">
+          lol you wish yaar, tell me what's actually up 
+          <span class="tone-badge" style="background: rgba(6,182,212,0.12); color: var(--teal2); position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Chill</span>
+        </div>
+        <div class="reply-card">
+          Waiting for the right moment to reply... 👀
+          <span class="tone-badge tag-purple" style="background: rgba(124,58,237,0.15); color: var(--accent3); position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Flirty</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ EXTENSION ============ -->
+<section id="extension">
+<div class="container">
+  <div class="section-tag">Document 08 — Browser Extension</div>
+  <div class="section-title">WhatsApp & Instagram Extension</div>
+  <div class="section-desc">Chrome Extension (Manifest V3) that injects a Shadow Chats button directly into WhatsApp Web and Instagram DMs.</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>🔧 Extension Architecture</h3>
+      <p><strong>manifest.json:</strong> Declares permissions for whatsapp.com and instagram.com. Uses content_scripts and background service_worker.</p>
+      <p style="margin-top:8px;"><strong>content_script.js:</strong> Injected on page load. Watches DOM for chat input area. Injects the Shadow Chats button.</p>
+      <p style="margin-top:8px;"><strong>popup.html:</strong> The extension popup with settings and quick generate.</p>
+      <p style="margin-top:8px;"><strong>background.js:</strong> Service worker. Handles API calls to Shadow Chats backend. Manages auth token.</p>
+    </div>
+    <div class="card">
+      <h3>📌 DOM Injection Strategy</h3>
+      <p><strong>WhatsApp Web:</strong> Find the footer div with <code>[data-tab="10"]</code>. Inject a button div after the emoji button.</p>
+      <p style="margin-top:8px;"><strong>Instagram DMs:</strong> Find the input area <code>[placeholder="Message..."]</code>. Insert button in the parent row.</p>
+      <p style="margin-top:8px;"><strong>Context Reading:</strong> Read all <code>.message-in</code> and <code>.message-out</code> elements (last 15 messages) from DOM to build context.</p>
+    </div>
+  </div>
+
+  <!-- Extension UI Mock -->
+  <h3 style="margin: 28px 0 16px; font-size: 17px;">Extension Panel (Injected Sidebar)</h3>
+  <div style="display: flex; justify-content: center;">
+    <div class="ext-frame">
+      <div class="ext-header">
+        <h3>✨ Shadow Chats</h3>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <div style="font-size: 9px; background: rgba(255,255,255,0.15); padding: 2px 7px; border-radius: 8px; color: white;">⚡ Groq</div>
+          <div style="font-size: 14px; cursor: pointer; color: white; opacity: 0.7;">✕</div>
+        </div>
+      </div>
+      <div class="ext-body">
+        <!-- Context -->
+        <div class="ext-context">
+          <strong>LAST MESSAGE FROM THEM</strong>
+          "ok whatever lol" — Priya
+        </div>
+        <!-- Tone -->
+        <div style="font-size: 9px; color: var(--text3); font-weight: 600; margin-bottom: 6px;">SELECT TONE</div>
+        <div class="sc-tone-bar" style="flex-wrap: wrap; gap: 4px; margin-bottom: 10px;">
+          <div class="sc-tone active">💜 Flirty</div>
+          <div class="sc-tone">😄 Funny</div>
+          <div class="sc-tone">💙 Caring</div>
+          <div class="sc-tone">⚡ Savage</div>
+          <div class="sc-tone">😎 Chill</div>
+        </div>
+        <!-- Reply Meter -->
+        <div style="background: rgba(239,68,68,0.1); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          <span>🌡️</span>
+          <div style="flex:1;">
+            <div style="font-size: 9px; color: var(--text3);">VIBE METER</div>
+            <div style="font-size: 10px; color: #f87171; font-weight: 600;">Slightly Hurt</div>
+          </div>
+          <div style="font-size: 16px; font-weight: 700; color: #f87171;">62</div>
+        </div>
+        <!-- Replies -->
+        <div style="font-size: 9px; color: var(--text3); font-weight: 600; margin-bottom: 6px;">✨ CLICK TO INSERT</div>
+        <div class="sc-reply-opt" onclick="this.style.borderColor='var(--accent)'">Ignore you? I was thinking about you 😏</div>
+        <div class="sc-reply-opt" onclick="this.style.borderColor='var(--accent)'">lol you wish yaar, what's up 🙄</div>
+        <div class="sc-reply-opt" onclick="this.style.borderColor='var(--accent)'">Waiting for the right moment... 👀</div>
+        <div style="display:flex; gap:6px; margin-top: 10px;">
+          <div style="flex:1; background: var(--bg4); border: 1px solid var(--border2); border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; color: var(--text2); cursor: pointer;">🔄 Regenerate</div>
+          <div style="flex:1; background: var(--accent); border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; color: white; cursor: pointer;">⚙️ Settings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Extension manifest.json</h3>
+  <pre>
+{
+  "manifest_version": 3,
+  "name": "Shadow Chats",
+  "version": "1.0.0",
+  "description": "AI reply suggestions for WhatsApp & Instagram",
+  "permissions": ["storage", "tabs", "scripting"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*",
+    "https://www.instagram.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content/whatsapp.js"],
+      "css": ["content/shadow-chats.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content/instagram.js"],
+      "css": ["content/shadow-chats.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon48.png"
+  }
+}
+  </pre>
+</div>
+</section>
+
+<!-- ============ API DOCS ============ -->
+<section id="api">
+<div class="container">
+  <div class="section-tag">Document 09 — API Reference</div>
+  <div class="section-title">Full API Documentation</div>
+  <div class="section-desc">All REST endpoints, authentication, request/response formats, and error codes.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/auth/register</code></td><td>None</td><td>Create account with email+password or Google OAuth</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/auth/login</code></td><td>None</td><td>Login, returns JWT access + refresh tokens</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/auth/refresh</code></td><td>Refresh token</td><td>Get new access token</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/ocr/extract</code></td><td>JWT</td><td>Upload screenshot, extract conversation text</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/reply/generate</code></td><td>JWT</td><td>Core endpoint — generate reply suggestions</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/reply/regenerate/{session_id}</code></td><td>JWT</td><td>Regenerate replies for same context, different tone</td></tr>
+        <tr><td><span class="tag tag-blue">GET</span></td><td><code>/reply/history</code></td><td>JWT</td><td>Paginated list of past sessions</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/emotion/analyze</code></td><td>JWT</td><td>Run emotion detection on text, return label + score</td></tr>
+        <tr><td><span class="tag tag-blue">GET</span></td><td><code>/user/profile</code></td><td>JWT</td><td>Get user profile + persona settings</td></tr>
+        <tr><td><span class="tag tag-amber">PUT</span></td><td><code>/user/profile</code></td><td>JWT</td><td>Update persona, default tone, language</td></tr>
+        <tr><td><span class="tag tag-blue">GET</span></td><td><code>/user/quota</code></td><td>JWT</td><td>Check today's generation count vs limit</td></tr>
+        <tr><td><span class="tag tag-blue">GET</span></td><td><code>/config/ai-engine</code></td><td>JWT</td><td>Get current AI engine settings</td></tr>
+        <tr><td><span class="tag tag-amber">PUT</span></td><td><code>/config/ai-engine</code></td><td>JWT</td><td>Switch engine, save custom keys/endpoint</td></tr>
+        <tr><td><span class="tag tag-green">POST</span></td><td><code>/config/test-key</code></td><td>JWT</td><td>Validate a Groq/Gemini API key before saving</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin: 28px 0 14px; font-size: 17px;">Error Codes</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>HTTP</th><th>Meaning</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>AUTH_001</td><td>401</td><td>Invalid or expired JWT</td><td>Redirect to login</td></tr>
+        <tr><td>QUOTA_001</td><td>429</td><td>Daily free quota reached</td><td>Show upgrade prompt</td></tr>
+        <tr><td>QUOTA_002</td><td>429</td><td>Engine rate limit hit</td><td>Auto-fallback to next engine</td></tr>
+        <tr><td>AI_001</td><td>503</td><td>All AI engines unavailable</td><td>Retry in 30s, show error</td></tr>
+        <tr><td>OCR_001</td><td>422</td><td>Image too blurry/unreadable</td><td>Ask user to re-upload</td></tr>
+        <tr><td>OCR_002</td><td>413</td><td>Image too large (&gt;10MB)</td><td>Compress before upload</td></tr>
+        <tr><td>CONTEXT_001</td><td>400</td><td>Context too short (&lt;10 chars)</td><td>Ask for more context</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ============ DATABASE ============ -->
+<section id="db">
+<div class="container">
+  <div class="section-tag">Document 10 — Database</div>
+  <div class="section-title">Database Design</div>
+  <div class="section-desc">Entity relationships, indexing strategy, and data retention policies.</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>🗄️ PostgreSQL Tables</h3>
+      <p><strong>users</strong> → <strong>reply_sessions</strong> (1:many)</p>
+      <p><strong>users</strong> → <strong>api_configs</strong> (1:1)</p>
+      <p><strong>users</strong> → <strong>personas</strong> (1:1)</p>
+      <p><strong>reply_sessions</strong> → <strong>reply_feedback</strong> (1:many)</p>
+    </div>
+    <div class="card">
+      <h3>⚡ Redis Keys</h3>
+      <p><code>quota:{user_id}</code> → daily count (TTL: midnight)</p>
+      <p><code>session:{token}</code> → user data cache (TTL: 15min)</p>
+      <p><code>ratelimit:{ip}</code> → request count (TTL: 1min)</p>
+      <p><code>engine_status:{name}</code> → up/down flag (TTL: 5min)</p>
+    </div>
+    <div class="card">
+      <h3>📊 Key Indexes</h3>
+      <p><code>users(email)</code> — unique, for login</p>
+      <p><code>reply_sessions(user_id, created_at)</code> — for history queries</p>
+      <p><code>reply_sessions(engine_used)</code> — for analytics</p>
+    </div>
+    <div class="card">
+      <h3>🗑️ Data Retention</h3>
+      <p>reply_sessions: 90 days for free users, 1 year for pro</p>
+      <p>OCR screenshots: deleted after 24 hours from object storage</p>
+      <p>Context text: stored encrypted, user can delete anytime</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section id="roadmap">
+<div class="container">
+  <div class="section-tag">Document 11 — Roadmap</div>
+  <div class="section-title">Development Roadmap</div>
+  <div class="section-desc">Phase-by-phase build plan with deliverables and milestones.</div>
+
+  <div class="phase p1">
+    <div class="phase-header">
+      <div class="phase-title">🌐 Phase 1 — Web App MVP</div>
+      <div class="phase-duration">Weeks 1–6</div>
+    </div>
+    <ul class="feature-list">
+      <li>React Native Web + Expo setup</li>
+      <li>Web app deployed (Vercel/Railway)</li>
+      <li>Screenshot OCR (Google Vision)</li>
+      <li>Reply Generator (Groq API)</li>
+      <li>6 Tone Modes</li>
+      <li>Reply Meter (Emotion Score)</li>
+      <li>Firebase / Supabase Auth</li>
+      <li>FastAPI Backend + PostgreSQL</li>
+      <li>Basic quota system (20/day free)</li>
+      <li>Web responsive on mobile browser</li>
+    </ul>
+  </div>
+
+  <div class="phase p2">
+    <div class="phase-header">
+      <div class="phase-title">🌐 Phase 2 — Web + Extension</div>
+      <div class="phase-duration">Weeks 7–14</div>
+    </div>
+    <ul class="feature-list">
+      <li>Web App (React + TypeScript)</li>
+      <li>Chrome Extension (MV3)</li>
+      <li>WhatsApp Web integration</li>
+      <li>Instagram DM integration</li>
+      <li>AI Engine Toggle UI</li>
+      <li>Custom model (Ollama support)</li>
+      <li>Self-hosted emotion classifier</li>
+      <li>Reply History &amp; search</li>
+      <li>Custom Persona settings</li>
+      <li>Gemini Flash fallback</li>
+      <li>Pro tier subscription</li>
+      <li>Razorpay payment integration</li>
+    </ul>
+  </div>
+
+  <div class="phase p3">
+    <div class="phase-header">
+      <div class="phase-title">🏆 Phase 3 — Scale + Polish</div>
+      <div class="phase-duration">Weeks 15–24</div>
+    </div>
+    <ul class="feature-list">
+      <li>iOS App (SwiftUI)</li>
+      <li>Multi-language (Hindi, Bengali)</li>
+      <li>Hinglish Romanized support</li>
+      <li>Fine-tuned reply model</li>
+      <li>Voice-to-reply</li>
+      <li>Share extension (iOS/Android)</li>
+      <li>Team plan + shared personas</li>
+      <li>Analytics dashboard</li>
+      <li>A/B testing framework</li>
+      <li>Firefox extension</li>
+      <li>Telegram support</li>
+    </ul>
+  </div>
+
+  <h3 style="margin: 32px 0 16px; font-size: 17px;">Cost Estimate (Free Tier Usage)</h3>
+  <div class="cost-grid">
+    <div class="cost-card">
+      <h4>Groq API</h4>
+      <div class="cost-price">₹0</div>
+      <div class="cost-desc">~14,400 req/day free. More than enough for MVP launch.</div>
+    </div>
+    <div class="cost-card">
+      <h4>Gemini Flash</h4>
+      <div class="cost-price">₹0</div>
+      <div class="cost-desc">1M tokens/day free. Can handle 1000+ users on free tier.</div>
+    </div>
+    <div class="cost-card">
+      <h4>Backend Hosting</h4>
+      <div class="cost-price">₹0</div>
+      <div class="cost-desc">Railway.app or Render free tier: 512MB RAM, 1 service.</div>
+    </div>
+    <div class="cost-card">
+      <h4>Database</h4>
+      <div class="cost-price">₹0</div>
+      <div class="cost-desc">Supabase free tier: 500MB PostgreSQL, auth included.</div>
+    </div>
+    <div class="cost-card">
+      <h4>OCR</h4>
+      <div class="cost-price">₹0</div>
+      <div class="cost-desc">Google Vision: 1000 images/month free. Tesseract: unlimited self-hosted.</div>
+    </div>
+    <div class="cost-card">
+      <h4>Total MVP Cost</h4>
+      <div class="cost-price" style="color: var(--green);">₹0</div>
+      <div class="cost-desc">Full Phase 1 MVP can be built and launched at zero cost.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<div style="background: var(--bg2); border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--text3); font-size: 12px;">
+  Shadow Chats — Complete Documentation Suite v1.0 | Built by Sumeet | AI/ML Specialization, NSEC MAKAUT<br>
+  <span style="color: var(--text3); font-size: 11px;">PRD • HLD • LLD • Architecture • Wireframes • API Docs • DB Schema • Roadmap</span>
+</div>
+
+<script>
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+
+  // Engine selection
+  function selectEngine(name) {
+    ['groq','gemini','together'].forEach(e => {
+      document.getElementById(e+'-card')?.classList.remove('selected');
+    });
+    document.getElementById(name+'-card')?.classList.add('selected');
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
