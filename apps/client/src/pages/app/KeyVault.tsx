@@ -1,115 +1,125 @@
-import React, { useState } from 'react';
-import { I } from '../../components/Icon';
+import { useState } from 'react'
+import { GlassCard, Chip, Icon, Button } from '@/design-system/primitives'
+import { maskKey } from '@/lib/utils'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
-const INITIAL_KEYS = [
-  { id: 1, name: "OpenAI GPT-4", key: "sk-...7xK4", fullKey: "sk-proj-1234567890abcdef", status: "active", usage: 67, limit: "100K tok/day", lastUsed: "2m ago" },
-  { id: 2, name: "Anthropic Claude", key: "sk-ant-...9bR2", fullKey: "sk-ant-api03-abcdef123456", status: "active", usage: 42, limit: "50K tok/day", lastUsed: "18m ago" },
-  { id: 3, name: "Twitter API v2", key: "tw-...mN8", fullKey: "tw-1234567890-abcdef", status: "active", usage: 82, limit: "500 req/15min", lastUsed: "3m ago" },
-  { id: 4, name: "Reddit API", key: "rd-...pQ3", fullKey: "rd-1234567890-abcdef", status: "expired", usage: 0, limit: "100 req/min", lastUsed: "2d ago" },
-  { id: 5, name: "Discord Bot Token", key: "dc-...wL5", fullKey: "dc-1234567890-abcdef", status: "active", usage: 31, limit: "Unlimited", lastUsed: "45m ago" },
-];
+interface VaultKey {
+  id: string
+  label: string
+  provider: string
+  key: string
+  color: string
+  added: string
+}
 
-export function KeyVault({ nav }: { nav: (path: string) => void }) {
-  const [keys, setKeys] = useState(INITIAL_KEYS);
-  const [reveal, setReveal] = useState<number | null>(null);
-  const [modal, setModal] = useState({ open: false, name: "", key: "" });
+const VAULT_KEYS: VaultKey[] = [
+  { id: 'openai', label: 'OpenAI API Key', provider: 'OpenAI', key: 'sk-aB3dEfGhIjKlMnOpQrSt1234', color: 'var(--green)', added: '2025-01-15' },
+  { id: 'anthropic', label: 'Anthropic API Key', provider: 'Anthropic', key: 'sk-ant-XyZ9aBcDeFgHiJkLmNoPqRs', color: '#a78bfa', added: '2025-02-01' },
+  { id: 'google', label: 'Google Gemini Key', provider: 'Google', key: 'AIzaSyDaBcDeFgHiJkLmNoPqRsTuVwXyZ01234', color: 'var(--amber)', added: '2025-03-10' },
+]
 
-  const handleSave = () => {
-    if (!modal.name.trim() || !modal.key.trim()) return;
-    const newKey = {
-      id: Date.now(),
-      name: modal.name.trim(),
-      key: modal.key.substring(0, 3) + "-..." + modal.key.substring(modal.key.length - 4),
-      fullKey: modal.key,
-      status: "active",
-      usage: 0,
-      limit: "Unlimited",
-      lastUsed: "Never"
-    };
-    setKeys([newKey, ...keys]);
-    setModal({ open: false, name: "", key: "" });
-  };
+/**
+ * KeyVault — SEC-4: Keys masked by default, reveal requires confirmation dialog,
+ * auto-re-masks after 30 seconds.
+ */
+export default function KeyVault() {
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({})
+  const [confirmKey, setConfirmKey] = useState<string | null>(null)
+  const [timers, setTimers] = useState<Record<string, ReturnType<typeof setTimeout>>>({})
+  const dialogRef = useFocusTrap(confirmKey !== null)
 
-  const handleDelete = (id: number) => {
-    setKeys(keys.filter(k => k.id !== id));
-  };
+  const revealKey = (id: string) => {
+    setConfirmKey(null)
+    setRevealed(r => ({ ...r, [id]: true }))
+    // Auto-re-mask after 30s (SEC-4)
+    if (timers[id]) clearTimeout(timers[id])
+    const t = setTimeout(() => {
+      setRevealed(r => ({ ...r, [id]: false }))
+    }, 30_000)
+    setTimers(prev => ({ ...prev, [id]: t }))
+  }
+
+  const copyKey = (key: string) => {
+    navigator.clipboard.writeText(key).catch(() => {})
+  }
 
   return (
     <div className="enter">
-      <div style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-        <div>
-          <h1 className="h-md"><span className="grad-c">Key Vault</span></h1>
-          <p style={{ color: "var(--txt2)", fontSize: 13.5, marginTop: 4 }}>API keys & secrets · <span style={{ color: "var(--green)" }}>encrypted at rest</span></p>
-        </div>
-        <button className="btn-p" onClick={() => setModal({ open: true, name: "", key: "" })}><I n="add" s={15} /> Add Key</button>
+      <div style={{ marginBottom: 22 }}>
+        <Chip variant="amber" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>SECURITY</Chip>
+        <h1 className="h-md">Key <span className="txt-a">Vault</span></h1>
+        <p className="txt-2" style={{ fontSize: 13.5, marginTop: 4 }}>API keys masked by default. Reveal requires confirmation. Auto-re-masks after 30 seconds.</p>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {keys.map((k) => (
-          <div key={k.id} className="glass" style={{ padding: "18px 22px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ display: "flex", gap: 12, alignItems: "center", flex: 1 }}>
-                <div className="icon-box" style={{ width: 36, height: 36, background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.18)" }}><I n="key" s={16} c="var(--cyan)" /></div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontWeight: 600, fontSize: 14 }}>{k.name}</span>
-                    <span className={`chip ${k.status === "active" ? "chip-g" : "chip-r"}`} style={{ fontSize: 9 }}>{k.status.toUpperCase()}</span>
-                  </div>
-                  <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-                    <span className="mono txt-2" style={{ fontSize: 11 }}>{reveal === k.id ? k.fullKey : k.key}</span>
-                    <span className="mono txt-2" style={{ fontSize: 10 }}>Limit: {k.limit}</span>
-                    <span className="mono txt-2" style={{ fontSize: 10 }}>Last: {k.lastUsed}</span>
-                  </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {VAULT_KEYS.map(vk => (
+          <GlassCard key={vk.id} style={{ padding: '20px 24px' } as React.CSSProperties}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div className="icon-box" style={{ width: 44, height: 44, background: `${vk.color}14`, border: `1px solid ${vk.color}25`, flexShrink: 0 }}>
+                <Icon name="key" size={20} color={vk.color} aria-hidden />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{vk.label}</div>
+                <div className="mono" style={{ fontSize: 12, color: 'var(--txt2)', letterSpacing: '0.05em' }}>
+                  {revealed[vk.id] ? vk.key : maskKey(vk.key)}
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                {k.status === "active" && (
-                  <div style={{ width: 80 }}>
-                    <div className="pt"><div className="pf" style={{ width: `${k.usage}%`, background: k.usage > 80 ? "var(--amber)" : "var(--green)" }} /></div>
-                    <div className="mono txt-2" style={{ fontSize: 9, textAlign: "right", marginTop: 2 }}>{k.usage}%</div>
-                  </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  className="btn-g btn-sm"
+                  onClick={() => revealed[vk.id] ? setRevealed(r => ({ ...r, [vk.id]: false })) : setConfirmKey(vk.id)}
+                  aria-label={revealed[vk.id] ? `Hide ${vk.label}` : `Reveal ${vk.label}`}
+                >
+                  <Icon name={revealed[vk.id] ? 'visibility_off' : 'visibility'} size={13} aria-hidden />
+                  {revealed[vk.id] ? 'Hide' : 'Reveal'}
+                </button>
+                {revealed[vk.id] && (
+                  <button
+                    className="btn-g btn-sm"
+                    onClick={() => copyKey(vk.key)}
+                    aria-label={`Copy ${vk.label}`}
+                  >
+                    <Icon name="content_copy" size={13} aria-hidden />
+                  </button>
                 )}
-                <button className="btn-g btn-sm" onClick={() => setReveal(reveal === k.id ? null : k.id)}><I n={reveal === k.id ? "visibility_off" : "visibility"} s={12} /></button>
-                <button className="btn-g btn-sm" onClick={() => handleDelete(k.id)}><I n="delete" s={12} /></button>
               </div>
             </div>
-          </div>
+          </GlassCard>
         ))}
       </div>
 
-      {/* Add Key Modal */}
-      {modal.open && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-          <div className="glass" style={{ width: "100%", maxWidth: 420, padding: 24, display: "flex", flexDirection: "column" }}>
-            <h2 className="h-md" style={{ marginBottom: 20 }}>Store API Key</h2>
-            
-            <div style={{ marginBottom: 16 }}>
-              <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 8 }}>PROVIDER / SERVICE NAME</div>
-              <input 
-                className="field" 
-                value={modal.name} 
-                onChange={e => setModal({ ...modal, name: e.target.value })} 
-                placeholder="e.g. Stripe Live Key" 
-              />
+      {/* Confirm Reveal Dialog — SEC-4 */}
+      {confirmKey && (
+        <div
+          className="overlay"
+          role="presentation"
+          onClick={() => setConfirmKey(null)}
+        >
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reveal-dialog-title"
+            className="glass-hi"
+            style={{ padding: '28px 32px', maxWidth: 420, margin: '20vh auto', borderRadius: 'var(--r-xl)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 16 }}>
+              <Icon name="warning" size={20} color="var(--amber)" aria-hidden />
+              <h2 id="reveal-dialog-title" className="h-sm">Confirm Key Reveal</h2>
             </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 8 }}>API KEY (ENCRYPTED)</div>
-              <input 
-                className="field" 
-                type="password"
-                value={modal.key} 
-                onChange={e => setModal({ ...modal, key: e.target.value })} 
-                placeholder="sk-..." 
-              />
-            </div>
-            
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 12 }}>
-              <button className="btn-g" onClick={() => setModal({ ...modal, open: false })}>Cancel</button>
-              <button className="btn-p" onClick={handleSave} disabled={!modal.name.trim() || !modal.key.trim()}><I n="lock" s={13} /> Secure Key</button>
+            <p className="txt-2" style={{ fontSize: 13.5, lineHeight: 1.65, marginBottom: 20 }}>
+              This API key will be visible in plaintext for 30 seconds before auto-masking. Ensure no one can see your screen.
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Button variant="ghost" onClick={() => setConfirmKey(null)} style={{ flex: 1, justifyContent: 'center' }}>Cancel</Button>
+              <Button variant="action" onClick={() => { if (confirmKey) revealKey(confirmKey) }} style={{ flex: 2, justifyContent: 'center' }}>
+                <Icon name="visibility" size={14} aria-hidden /> Reveal Key
+              </Button>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

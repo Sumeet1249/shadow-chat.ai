@@ -1,81 +1,77 @@
-import React, { useState } from 'react';
-import { I } from '../../components/Icon';
+// EngineSettings — Phase 7.5 stub
+import { useState } from 'react'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { ToggleLeft, ToggleRight } from 'lucide-react'
 
-const INITIAL_SETTINGS = [
-  { section: "Model Configuration", items: [
-    { label: "Primary Model", value: "claude-3.5-sonnet", type: "select", options: ["claude-3.5-sonnet", "gpt-4-turbo", "llama-3-70b", "mixtral-8x7b"] },
-    { label: "Temperature", value: "0.7", type: "range", min: 0, max: 2 },
-    { label: "Max Tokens", value: "4096", type: "number" },
-    { label: "Top P", value: "0.95", type: "range", min: 0, max: 1 },
-  ]},
-  { section: "Generation", items: [
-    { label: "Auto-retry on failure", value: true, type: "toggle" },
-    { label: "Stream responses", value: true, type: "toggle" },
-    { label: "Cache generations", value: false, type: "toggle" },
-  ]},
-  { section: "Rate Limiting", items: [
-    { label: "Max requests/minute", value: "60", type: "number" },
-    { label: "Cooldown period (seconds)", value: "30", type: "number" },
-    { label: "Auto-throttle", value: true, type: "toggle" },
-  ]},
-];
+const MODELS = [
+  { id: 'gpt4o',   name: 'GPT-4o',            provider: 'OpenAI',    cost: '$0.005/1K' },
+  { id: 'claude',  name: 'Claude 3.5 Sonnet', provider: 'Anthropic', cost: '$0.003/1K' },
+  { id: 'gemini',  name: 'Gemini Pro 1.5',    provider: 'Google',    cost: '$0.0025/1K' },
+]
 
-export function EngineSettings({ nav }: { nav: (path: string) => void }) {
-  const [settings, setSettings] = useState(INITIAL_SETTINGS);
-  const [saved, setSaved] = useState(false);
-
-  const updateSetting = (sIndex: number, iIndex: number, val: any) => {
-    const newSettings = [...settings];
-    newSettings[sIndex].items[iIndex].value = val;
-    setSettings(newSettings);
-  };
-
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
-  };
+export default function EngineSettings() {
+  const [model, setModel] = useState('gpt4o')
+  const [temp, setTemp] = useState(72)
+  const [topP, setTopP] = useState(90)
+  const [streaming, setStreaming] = useState(true)
+  const [maxTokens, setMaxTokens] = useState(280)
 
   return (
     <div className="enter">
-      <div style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-        <div>
-          <h1 className="h-md"><span className="grad-c">Engine Settings</span></h1>
-          <p style={{ color: "var(--txt2)", fontSize: 13.5, marginTop: 4 }}>Model configuration & system parameters</p>
-        </div>
-        <button className="btn-p" onClick={handleSave}><I n="save" s={15} /> Save Changes</button>
+      <div style={{ marginBottom: 22 }}>
+        <Chip variant="amber" style={{ marginBottom: 8, display: 'inline-flex' } as React.CSSProperties}>ENGINE</Chip>
+        <h1 className="h-md">Engine <span className="txt-a">Settings</span></h1>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 680 }}>
-        {settings.map((s, si) => (
-          <div key={si} className="glass" style={{ padding: "22px" }}>
-            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 18 }}>{s.section.toUpperCase()}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {s.items.map((item, ii) => (
-                <div key={ii} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 14, fontWeight: 500 }}>{item.label}</span>
-                  {item.type === "toggle" ? (
-                    <div onClick={() => updateSetting(si, ii, !item.value)} style={{ width: 40, height: 22, borderRadius: 99, background: item.value ? "var(--cyan)" : "var(--txt3)", cursor: "pointer", position: "relative", transition: "all var(--t-fast)" }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "#fff", position: "absolute", top: 3, left: item.value ? 21 : 3, transition: "left var(--t-fast)" }} />
-                    </div>
-                  ) : item.type === "select" ? (
-                    <select className="field" style={{ width: 200, padding: "8px 12px", fontSize: 12 }} value={item.value as string} onChange={e => updateSetting(si, ii, e.target.value)}>
-                      {item.options?.map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  ) : (
-                    <input className="field" value={item.value as string} onChange={e => updateSetting(si, ii, e.target.value)} style={{ width: 120, padding: "8px 12px", fontSize: 12, textAlign: "right" }} />
-                  )}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <GlassCard style={{ padding: '22px 24px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 14 }}>MODEL SELECTION</div>
+            {MODELS.map(m => (
+              <label key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px', borderRadius: 'var(--r-lg)', border: `1px solid ${model === m.id ? 'rgba(0,229,255,0.25)' : 'var(--border)'}`, background: model === m.id ? 'rgba(0,229,255,0.05)' : 'transparent', cursor: 'pointer', marginBottom: 8, transition: 'all var(--t-mid)' }}>
+                <input type="radio" name="model" value={m.id} checked={model === m.id} onChange={() => setModel(m.id)} style={{ accentColor: 'var(--cyan)' }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{m.name}</div>
+                  <div className="mono txt-2" style={{ fontSize: 9 }}>{m.provider} · {m.cost}</div>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+              </label>
+            ))}
+          </GlassCard>
 
-      {/* Toast Notification */}
-      {saved && (
-        <div style={{ position: "fixed", top: 32, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#059669,#10b981)", color: "#fff", padding: "12px 28px", borderRadius: 999, fontFamily: "var(--ff-mono)", fontSize: 12, letterSpacing: ".02em", boxShadow: "0 8px 32px rgba(5,150,105,.3)", zIndex: 9999, animation: "enter .3s ease", display: "flex", alignItems: "center", gap: 8 }}>
-          <I n="check_circle" s={15} /> Successfully changed
+          <GlassCard style={{ padding: '22px 24px' } as React.CSSProperties}>
+            <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>GENERATION PARAMETERS</div>
+            {([['Temperature', temp, setTemp, 'Creativity and randomness'], ['Top P', topP, setTopP, 'Nucleus sampling threshold']] as const).map(([label, val, setter, desc]) => (
+              <div key={label} style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <div><div style={{ fontSize: 13, fontWeight: 500 }}>{label}</div><div className="mono txt-2" style={{ fontSize: 9 }}>{desc}</div></div>
+                  <span className="mono txt-c" style={{ fontSize: 14, fontWeight: 700 }}>{(val / 100).toFixed(2)}</span>
+                </div>
+                <input type="range" min={0} max={100} value={val} onChange={e => setter(+e.target.value)} aria-label={label} style={{ width: '100%', height: 4, appearance: 'none', background: `linear-gradient(to right,var(--cyan) ${val}%,rgba(255,255,255,0.06) ${val}%)`, borderRadius: 99, outline: 'none', cursor: 'pointer' }} />
+              </div>
+            ))}
+          </GlassCard>
         </div>
-      )}
+
+        <GlassCard style={{ padding: '20px 22px' } as React.CSSProperties}>
+          <div className="mono txt-2" style={{ fontSize: 10, marginBottom: 16 }}>ADVANCED OPTIONS</div>
+          <div style={{ marginBottom: 18 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+              <span style={{ fontSize: 13 }}>Streaming Output</span>
+              <button onClick={() => setStreaming(s => !s)} aria-label={`${streaming ? 'Disable' : 'Enable'} streaming output`} style={{ background: 'none', border: 'none', cursor: 'pointer', color: streaming ? 'var(--cyan)' : 'var(--txt3)' }}>
+                {streaming ? <ToggleRight size={26} aria-hidden /> : <ToggleLeft size={26} aria-hidden />}
+              </button>
+            </div>
+            <p className="txt-2" style={{ fontSize: 11 }}>Stream tokens as they are generated.</p>
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <div className="mono txt-2" style={{ fontSize: 9, marginBottom: 6 }}>MAX TOKENS</div>
+            <input type="number" className="field" value={maxTokens} onChange={e => setMaxTokens(+e.target.value)} min={50} max={4096} aria-label="Maximum tokens" />
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button variant="primary" style={{ flex: 1, justifyContent: 'center' }}><Icon name="save" size={13} aria-hidden /> Save</Button>
+            <Button variant="ghost" size="sm" style={{ justifyContent: 'center' }}><Icon name="restart_alt" size={13} aria-hidden /></Button>
+          </div>
+        </GlassCard>
+      </div>
     </div>
-  );
+  )
 }
