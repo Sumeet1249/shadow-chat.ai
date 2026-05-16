@@ -30,7 +30,7 @@ export function ParticleCanvas({ density = 0.5 }: { density?: number }) {
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < D) {
             ctx.beginPath(); ctx.moveTo(P[i].x, P[i].y); ctx.lineTo(P[j].x, P[j].y);
-            ctx.strokeStyle = `rgba(0,229,255,${(1 - d / D) * .13})`; ctx.lineWidth = .5; ctx.stroke();
+            ctx.strokeStyle = `rgba(5,150,105,${(1 - d / D) * .1})`; ctx.lineWidth = .5; ctx.stroke();
           }
         }
       }
@@ -40,7 +40,7 @@ export function ParticleCanvas({ density = 0.5 }: { density?: number }) {
         if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
         const pulse = Math.sin(t * p.ps * 60 + p.pp) * .28 + .72;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,229,255,${p.op * pulse})`; ctx.fill();
+        ctx.fillStyle = `rgba(16,185,129,${p.op * pulse * 0.5})`; ctx.fill();
       });
       raf.current = requestAnimationFrame(draw);
     };
@@ -52,5 +52,5 @@ export function ParticleCanvas({ density = 0.5 }: { density?: number }) {
         window.removeEventListener("resize", resize); 
     };
   }, [density]);
-  return <canvas ref={ref} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: .7 }} />;
+  return <canvas ref={ref} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: .5 }} />;
 }

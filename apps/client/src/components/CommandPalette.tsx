@@ -42,12 +42,12 @@ export function CommandPalette({ onClose, nav }: { onClose: () => void, nav: (pa
           {filtered.map((cmd, i) => (
             <div key={i} onClick={() => { nav(cmd.p); onClose(); }}
               style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 18px", cursor: "pointer", transition: "background var(--t-fast)" }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(0,229,255,0.05)"}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(5,150,105,0.05)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-              <div className="icon-box" style={{ width: 30, height: 30, background: "rgba(0,229,255,0.07)", border: "1px solid var(--border)" }}>
+              <div className="icon-box" style={{ width: 30, height: 30, background: "rgba(5,150,105,0.06)", border: "1px solid var(--border)" }}>
                 <I n={cmd.i} s={15} c="var(--cyan)" />
               </div>
-              <span style={{ fontSize: 13, flex: 1 }}>{cmd.l}</span>
+              <span style={{ fontSize: 13, flex: 1, color: "var(--txt)" }}>{cmd.l}</span>
               <span className="chip chip-v" style={{ fontSize: 10 }}>{cmd.cat}</span>
             </div>
           ))}
