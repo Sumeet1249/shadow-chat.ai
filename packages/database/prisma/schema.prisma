@@ -1,0 +1,122 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(OPERATOR)
+  tier         Tier      @default(FREE)
+  workspaceId  String?
+  personas     Persona[]
+  apiKeys      ApiKey[]
+  outputs      Output[]
+  createdAt    DateTime  @default(now())
+}
+
+model Persona {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  name         String
+  handle       String
+  niche        String
+  voiceConfig  Json
+  platforms    String[]
+  memories     Memory[]
+  outputs      Output[]
+  isActive     Boolean   @default(false)
+}
+
+model Node {
+  id         String     @id @default(cuid())
+  name       String
+  region     String
+  provider   String
+  status     NodeStatus @default(IDLE)
+  lastPing   DateTime?
+  latencyMs  Int?
+  userId     String
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  service     String
+  ciphertext  String
+  iv          String
+  tag         String
+  label       String?
+  createdAt   DateTime @default(now())
+}
+
+model Memory {
+  id        String   @id @default(cuid())
+  personaId String
+  persona   Persona  @relation(fields: [personaId], references: [id])
+  content   String
+  embedding Unsupported("vector(1536)") // pgvector dimensions
+  tags      String[]
+  createdAt DateTime @default(now())
+}
+
+model Output {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  personaId   String
+  persona     Persona  @relation(fields: [personaId], references: [id])
+  platform    String
+  inputPrompt String
+  outputText  String
+  model       String
+  tokensIn    Int
+  tokensOut   Int
+  costUsd     Float
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model Workflow {
+  id         String         @id @default(cuid())
+  userId     String
+  name       String
+  steps      Json
+  schedule   String?
+  lastRunAt  DateTime?
+  status     WorkflowStatus @default(IDLE)
+}
+
+enum Role {
+  OPERATOR
+  ADMIN
+  SYNDICATE_ADMIN
+}
+
+enum Tier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum NodeStatus {
+  ACTIVE
+  IDLE
+  ERROR
+  DEPLOYING
+}
+
+enum WorkflowStatus {
+  IDLE
+  RUNNING
+  PAUSED
+  ERROR
+}
