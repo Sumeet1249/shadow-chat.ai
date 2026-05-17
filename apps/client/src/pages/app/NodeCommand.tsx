@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GlassCard, Chip, PulseDot, Icon, Button } from '@/design-system/primitives'
+import { GlassCard, Chip, PulseDot, Icon, Button } from '@/design-system/components'
 import { MOCK_NODES } from '@/data/mock/nodes'
 import { useNodeStore } from '@/store/useNodeStore'
 import type { NodeStatus } from '@/types'
@@ -40,7 +40,7 @@ function NodeVisualizer() {
           </g>
         ))}
       </svg>
-      <div style={{ position: 'absolute', bottom: 12, left: 18 }} className="mono txt-2" style={{ fontSize: 9 }}>CLUSTER_VISUALIZATION_v4.1</div>
+      <div className="mono txt-2" style={{ position: 'absolute', bottom: 12, left: 18, fontSize: 9 }}>CLUSTER_VISUALIZATION_v4.1</div>
     </GlassCard>
   )
 }

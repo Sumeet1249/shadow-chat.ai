@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { AmbientOrbs, LANDING_ORBS } from '@/design-system/effects/AmbientOrbs'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip } from '@/design-system/components'
 import { useTypewriter } from '@/hooks/useTypewriter'
 import { Brain } from 'lucide-react'
 

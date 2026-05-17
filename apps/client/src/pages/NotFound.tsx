@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
-import { Button } from '@/design-system/primitives'
+import { Button } from '@/design-system/components'
 
 /**
  * NotFound — 404 page.

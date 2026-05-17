@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUIStore } from '@/store/useUIStore'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
-import { Icon } from '@/design-system/primitives'
+import { Icon } from '@/design-system/components'
 
 import { NAV } from '@/data/nav'
 

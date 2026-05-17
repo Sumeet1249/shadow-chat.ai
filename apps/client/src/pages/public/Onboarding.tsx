@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { GlassCard, Icon, Chip, Button, ProgressBar } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip, Button, ProgressBar } from '@/design-system/components'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
 

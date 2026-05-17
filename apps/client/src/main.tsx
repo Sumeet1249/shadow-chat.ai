@@ -16,7 +16,9 @@ const syncTheme = (theme: string) => {
   document.documentElement.setAttribute('data-theme', theme)
 }
 syncTheme(state.theme)
-useUIStore.subscribe((state) => state.theme, syncTheme)
+useUIStore.subscribe((state) => {
+  syncTheme(state.theme)
+})
 
 const queryClient = new QueryClient({
   defaultOptions: {

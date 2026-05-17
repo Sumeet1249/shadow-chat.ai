@@ -1,4 +1,4 @@
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip } from '@/design-system/components'
 
 const STATS = [
   { label: 'TOTAL PERSONAS', value: '5', icon: 'psychology', color: 'var(--cyan)' },

@@ -1,4 +1,4 @@
-import { GlassCard } from '../primitives'
+import { GlassCard } from '../components'
 
 /**
  * SkeletonCard — Animated placeholder matching GlassCard dimensions.

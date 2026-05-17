@@ -12,7 +12,7 @@ interface Particle {
   vx: number
   vy: number
   size: number
-  opacity: number
+  opacity?: number
   color: string
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/components'
 import { isPrivateIP, isValidJSON } from '@/lib/utils'
 import { useAuthStore } from '@/store/useAuthStore'
 

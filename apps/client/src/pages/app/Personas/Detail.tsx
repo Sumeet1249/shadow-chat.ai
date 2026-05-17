@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { MOCK_PERSONAS } from '@/data/mock/personas'
-import { GlassCard, Icon, Chip, Button } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip, Button } from '@/design-system/components'
 
 export default function PersonaDetail() {
   const { id } = useParams<{ id: string }>()

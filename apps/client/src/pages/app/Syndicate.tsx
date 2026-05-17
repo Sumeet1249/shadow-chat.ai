@@ -1,4 +1,4 @@
-import { GlassCard, Chip, Icon, Button, ProgressBar } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, Button, ProgressBar } from '@/design-system/components'
 
 const MEMBERS = [
   { handle: 'Caleb_Shadow', email: 'caleb@shadownode.ai', role: 'Owner',   replies: 2847, color: 'var(--amber)' },

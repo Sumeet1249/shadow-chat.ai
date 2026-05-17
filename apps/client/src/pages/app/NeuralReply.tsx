@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip } from '@/design-system/components'
 import { MOCK_PERSONAS } from '@/data/mock/personas'
 import { usePersonaStore } from '@/store/usePersonaStore'
 

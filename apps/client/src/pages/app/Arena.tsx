@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { GlassCard, Icon, Chip, Button } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip, Button } from '@/design-system/components'
 
 const MODELS = [
   { id: 'claude', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', color: 'var(--cyan)', elo: 1247 },

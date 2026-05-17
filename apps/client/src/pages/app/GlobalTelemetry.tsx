@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GlassCard, Chip, Icon, ProgressBar } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, ProgressBar } from '@/design-system/components'
 
 const REGIONS = [
   { name: 'North America', pct: 38, nodes: 142, color: 'var(--cyan)' },

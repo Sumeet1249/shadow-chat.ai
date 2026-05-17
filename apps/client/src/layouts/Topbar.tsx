@@ -2,7 +2,7 @@ import { memo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUIStore } from '@/store/useUIStore'
 import { useAuthStore } from '@/store/useAuthStore'
-import { Icon, PulseDot } from '@/design-system/primitives'
+import { Icon, PulseDot } from '@/design-system/components'
 
 const TITLES: Record<string, string> = {
   '/dashboard':   'Dashboard',
@@ -103,7 +103,6 @@ function BellButton() {
 
 export const Topbar = memo(function Topbar() {
   const { openCmdPalette } = useUIStore()
-  const { user } = useAuthStore()
   const location = useLocation()
   const navigate = useNavigate()
 

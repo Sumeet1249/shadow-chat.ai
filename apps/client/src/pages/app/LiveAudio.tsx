@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/components'
 
 const TRANSCRIPT_SAMPLES = [
   "So the core thesis here is that retrieval is the new training. Instead of fine-tuning models, we focus on high-fidelity context injection.",

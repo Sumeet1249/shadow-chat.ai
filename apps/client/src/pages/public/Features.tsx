@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
-import { GlassCard, Icon, Chip, Button } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip, Button } from '@/design-system/components'
 import { Brain } from 'lucide-react'
 
 const FEATURES = [

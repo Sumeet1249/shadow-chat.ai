@@ -1,7 +1,7 @@
 import { useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/components'
 import api from '@/lib/api'
 import type { Plan } from '@/data/plans'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'

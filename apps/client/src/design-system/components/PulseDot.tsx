@@ -6,6 +6,7 @@ interface PulseDotProps {
   color?: PulseColor
   size?: number
   className?: string
+  style?: React.CSSProperties
 }
 
 const colorVars: Record<PulseColor, string> = {
@@ -19,7 +20,7 @@ const colorVars: Record<PulseColor, string> = {
  * PulseDot — Animated status indicator dot.
  * Maps to: .dot CSS class with pulse animation.
  */
-export function PulseDot({ color = 'green', size = 6, className }: PulseDotProps) {
+export function PulseDot({ color = 'green', size = 6, className, style }: PulseDotProps) {
   return (
     <span
       className={cn('dot', className)}
@@ -29,6 +30,7 @@ export function PulseDot({ color = 'green', size = 6, className }: PulseDotProps
         height: size,
         background: colorVars[color],
         boxShadow: `0 0 ${size * 2}px ${colorVars[color]}80`,
+        ...style,
       }}
     />
   )

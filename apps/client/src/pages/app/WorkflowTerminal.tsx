@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip } from '@/design-system/components'
 
 const PRESETS = [
   { label: 'Generate batch', cmd: 'generate --batch --platform twitter --count=5', icon: 'auto_awesome' },

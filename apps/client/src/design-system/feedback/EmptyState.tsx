@@ -1,5 +1,5 @@
-import { Icon } from '../primitives/Icon'
-import { Button } from '../primitives/Button'
+import { Icon } from '../components/Icon'
+import { Button } from '../components/Button'
 interface EmptyStateProps {
   icon?: string
   heading: string

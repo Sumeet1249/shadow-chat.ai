@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GlassCard, Chip, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon } from '@/design-system/components'
 
 const MEMORIES = [
   {

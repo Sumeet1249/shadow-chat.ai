@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { GlassCard, Icon, Button, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Button, Chip } from '@/design-system/components'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
 

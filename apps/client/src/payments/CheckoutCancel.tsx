@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { GlassCard, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Button, Icon } from '@/design-system/components'
 
 export default function CheckoutCancel() {
   const navigate = useNavigate()

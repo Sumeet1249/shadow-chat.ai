@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GlassCard, Chip, Icon, Button } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, Button } from '@/design-system/components'
 
 /** CircularGauge — SVG-based radial progress indicator */
 function CircularGauge({ value, label, color }: { value: number; label: string; color: string }) {

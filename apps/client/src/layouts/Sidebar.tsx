@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Icon } from '@/design-system/primitives'
+import { Icon } from '@/design-system/components'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Brain } from 'lucide-react'
 
@@ -90,7 +90,7 @@ export const Sidebar = memo(function Sidebar() {
               {user?.handle ?? 'Caleb_Shadow'}
             </div>
             <div className="mono" style={{ fontSize: 9, color: 'var(--amber)', letterSpacing: '0.05em', fontWeight: 700, marginTop: 1 }}>
-              ELITE TIER
+              {currentPlan.name.toUpperCase()} TIER
             </div>
           </div>
         </div>

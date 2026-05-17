@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GlassCard, Chip, Icon, } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, } from '@/design-system/components'
 import { MOCK_OUTPUTS, PLATFORM_COLORS } from '@/data/mock/outputs'
 import { useDebounce } from '@/hooks/useDebounce'
 

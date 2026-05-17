@@ -1,4 +1,4 @@
-import { GlassCard, Chip, Icon, Button, ProgressBar } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, Button, ProgressBar } from '@/design-system/components'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useNavigate } from 'react-router-dom'
 import { PLANS } from '@/data/plans'

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useUIStore, Theme } from '@/store/useUIStore'
-import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/components'
 
 const MODELS = [
   { id: 'gpt4o',   name: 'GPT-4o',            provider: 'OpenAI',    cost: '$0.005/1K' },

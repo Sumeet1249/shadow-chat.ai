@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react'
-import { PulseDot } from '@/design-system/primitives'
+import { PulseDot } from '@/design-system/components'
 
 export const StatusBar = memo(function StatusBar() {
   const [now, setNow] = useState(new Date())

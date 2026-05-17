@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ParticleCanvas } from '@/design-system/effects/ParticleCanvas'
 import { AmbientOrbs, LOGIN_ORBS } from '@/design-system/effects/AmbientOrbs'
 import { ScanlineOverlay } from '@/design-system/effects/ScanlineOverlay'
-import { Button, Field, Icon, Chip } from '@/design-system/primitives'
+import { Button, Field, Icon, Chip } from '@/design-system/components'
 import { Brain } from 'lucide-react'
 
 type Step = 1 | 2

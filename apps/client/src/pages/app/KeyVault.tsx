@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GlassCard, Chip, Icon, Button } from '@/design-system/primitives'
+import { GlassCard, Chip, Icon, Button } from '@/design-system/components'
 import { maskKey } from '@/lib/utils'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 

@@ -1,4 +1,4 @@
-import { GlassCard, Chip, Button, Icon } from '@/design-system/primitives'
+import { GlassCard, Chip, Button, Icon } from '@/design-system/components'
 import type { Plan } from '@/data/plans'
 
 interface PlanCardProps {

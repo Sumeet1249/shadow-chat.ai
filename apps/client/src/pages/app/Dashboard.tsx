@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { GlassCard, Icon, Chip } from '@/design-system/primitives'
+import { GlassCard, Icon, Chip } from '@/design-system/components'
 
 const STATS = [
   { label: 'TOTAL REPLIES', value: '2,847', trend: '+12.4%', icon: 'forum', color: 'var(--cyan)' },

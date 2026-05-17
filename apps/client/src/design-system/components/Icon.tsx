@@ -219,6 +219,7 @@ interface IconProps {
   strokeWidth?: number
   'aria-hidden'?: boolean
   'aria-label'?: string
+  style?: React.CSSProperties
 }
 
 /**
@@ -236,6 +237,7 @@ export function Icon({
   strokeWidth = 1.75,
   'aria-hidden': ariaHidden = true,
   'aria-label': ariaLabel,
+  style,
 }: IconProps) {
   const Component = ICON_MAP[name]
 
@@ -255,6 +257,7 @@ export function Icon({
       strokeWidth={strokeWidth}
       aria-hidden={ariaHidden}
       aria-label={ariaLabel}
+      style={style}
     />
   )
 }

@@ -4,9 +4,9 @@
  */
 import { Component } from 'react'
 import type { ReactNode } from 'react'
-import { Icon } from '../primitives/Icon'
-import { Button } from '../primitives/Button'
-import { GlassCard } from '../primitives/GlassCard'
+import { Icon } from '../components/Icon'
+import { Button } from '../components/Button'
+import { GlassCard } from '../components/GlassCard'
 
 interface ErrorBoundaryState { hasError: boolean }
 
